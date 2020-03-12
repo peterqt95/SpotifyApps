@@ -1,0 +1,11 @@
+.container {
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.problem-container {
+    width: 800px;
+}

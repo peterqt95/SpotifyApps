@@ -1,0 +1,34 @@
+.flex-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.form-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: start;
+}
+
+.flex-form-item {
+    width: 300px;
+    padding: 8px;
+}
+
+.actions {
+    display: flex;
+    flex-direction: row;
+    width: 300px;
+}
+
+.spacer {
+    flex: 1 1 auto;
+}
+
+.login-error {
+    padding: 8px;
+    border-radius: 8px;
+    background-color: pink;
+}

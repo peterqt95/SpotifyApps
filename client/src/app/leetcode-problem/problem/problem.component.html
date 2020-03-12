@@ -1,0 +1,12 @@
+<div class="container" *ngIf="loadStatus.isLoaded && !loadStatus.isError">
+  <h3>Problem Info</h3>
+  <form class="problem-info">
+    <mat-form-field appearance="outline">
+      <mat-label>Title</mat-label>
+      <input matInput [value]="note.title">
+    </mat-form-field>
+  </form>
+</div>
+<div *ngIf="loadStatus.isLoaded && loadStatus.isError">
+  <p>No item exists</p>
+</div>

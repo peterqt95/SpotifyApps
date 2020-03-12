@@ -1,0 +1,42 @@
+<div class="flex-container">
+  <form class="form-container" [formGroup]="loginFg">
+    <h3 class="flex-form-item">Login Page</h3>
+    <mat-form-field class="flex-form-item" appearance="standard">
+      <mat-label>Username</mat-label>
+      <input
+        matInput
+        placeholder="Username"
+        formControlName="userName">
+    </mat-form-field>
+    <mat-form-field class="flex-form-item" appearance="standard">
+      <mat-label>Password</mat-label>
+      <input
+        matInput
+        (keyup.enter)="login()"
+        placeholder="Password" [type]="hidePwd ? 'password' : 'text'"
+        formControlName="password">
+      <button
+        mat-icon-button
+        matSuffix
+        type="button"
+        (click)="hidePwd = !hidePwd"
+        [attr.aria-label]="'Hide password'"
+        [attr.aria-pressed]="hidePwd">
+        <mat-icon>{{hidePwd ? 'visibility_off' : 'visibility'}}</mat-icon>
+      </button>
+    </mat-form-field>
+  </form>
+  <div class="actions">
+    <button mat-flat-button color="primary" (click)="login()" type="submit">Login</button>
+    <span class="spacer"></span>
+    <mat-progress-spinner
+      *ngIf="!loadStatus.isLoaded && !loadStatus.isError"
+      [mode]="'indeterminate'"
+      [diameter]="30"
+      [strokeWidth]="2">
+    </mat-progress-spinner>
+  </div>
+  <div *ngIf="loadStatus.isLoaded && loadStatus.isError">
+    <p class="login-error">{{loadStatus.errorMsg}}</p>
+  </div>
+</div>
