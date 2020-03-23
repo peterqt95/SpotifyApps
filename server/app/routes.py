@@ -1,13 +1,15 @@
 import json
-from app import api, jwt, db
+from app import api, jwt, db, sp_oauth
 from .models import User, UserSchema
-from flask import request, session
+from flask import request, session, current_app
 from flask_restful import Resource, Api
 from http import HTTPStatus
 from flask_jwt_extended import (
     jwt_required, create_access_token, get_jwt_identity, create_refresh_token,
     jwt_refresh_token_required
 )
+import spotipy
+import spotipy.util as sp_util
 
 class Error():
     def __init__(self):
@@ -148,8 +150,71 @@ class RefreshTokenResource(Resource):
 
         return status.to_json(), return_status
 
+class SpotifyAuthResource(Resource):
+    def get(self):
+        return_status = HTTPStatus.OK
+        data = {}
+        try:
+            data['authUrl'] = sp_oauth.get_authorize_url()
+        except Exception as e:
+            print(e)
+            return_status = HTTPStatus.NOT_FOUND
+        
+        return data, return_status
+
+class SpotifyRedirectResource(Resource):
+    def get(self):
+        return_status = HTTPStatus.OK
+        data = {}
+        try:
+            data['token'] = current_app.config["SPOTIFY"]
+        except Exception as e:
+            print(e)
+            return_status = HTTPStatus.NOT_FOUND
+        
+        return data, return_status
+
+class SpotifyUserResource(Resource):
+
+    def _convert_params(self, data):
+        # Convert snake to camel
+        display_name = data['display_name']
+        data['displayName'] = display_name
+        del data['display_name']
+        return data
+
+    def get(self, code):
+        return_status = HTTPStatus.OK
+        data = {}
+        access_token = None
+
+        # Check to see if spotify session already active
+        if 'spotify_token' in session:
+            access_token = session['spotify_token']
+
+        # Fetch the token if there is none
+        if access_token is None:
+            token_info = sp_oauth.get_cached_token()
+            if token_info is None:
+                token_info = sp_oauth.get_access_token(code)
+            access_token = token_info['access_token']
+        
+        try:
+            # Fetch the user and store the spotify token
+            sp = spotipy.Spotify(auth=access_token)
+            data = self._convert_params(sp.current_user())
+            session['spotify_token'] = access_token
+        except Exception as e:
+            print(e)
+            return_status = HTTPStatus.NOT_FOUND
+        
+        return data, return_status
+
 api.add_resource(DefaultResource, '/')
 api.add_resource(UsersResource, '/users')
 api.add_resource(UserResource, '/users/<int:id>')
 api.add_resource(LoginRequired, '/login')
 api.add_resource(RefreshTokenResource, '/refresh')
+api.add_resource(SpotifyAuthResource, '/spotify_auth')
+api.add_resource(SpotifyRedirectResource, '/spotify_redirect')
+api.add_resource(SpotifyUserResource, '/spotify_user/<string:code>')
