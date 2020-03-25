@@ -1,29 +1,3 @@
 <div class="container" *ngIf="loadStatus.isLoaded && !loadStatus.isError">
-  <div class="problem-container">
-    <h3>Problems</h3>
-    <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
-    <mat-table [dataSource]="dataSource">
-      <ng-container matColumnDef="myId">
-        <mat-header-cell *matHeaderCellDef> ID </mat-header-cell>
-        <mat-cell *matCellDef="let row"> {{row.myId}} </mat-cell>
-      </ng-container>
-  
-      <ng-container matColumnDef="title">
-        <mat-header-cell *matHeaderCellDef> Title </mat-header-cell>
-        <mat-cell *matCellDef="let row"> {{row.title}} </mat-cell>
-      </ng-container>
-  
-      <ng-container matColumnDef="edit">
-        <mat-header-cell *matHeaderCellDef> Edit </mat-header-cell>
-        <mat-cell *matCellDef="let row">
-          <a mat-icon-button [routerLink]="['/problem', row.myId]">
-            <mat-icon>edit</mat-icon>
-          </a>
-        </mat-cell>
-      </ng-container>
-  
-      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-      <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
-    </mat-table>
-  </div>
+  <h1>{{spotifyUser.displayName}}</h1>
 </div>

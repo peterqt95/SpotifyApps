@@ -1,7 +1,7 @@
 import json
 from app import api, jwt, db, sp_oauth
 from .models import User, UserSchema
-from flask import request, session, current_app
+from flask import request, session, current_app, jsonify
 from flask_restful import Resource, Api
 from http import HTTPStatus
 from flask_jwt_extended import (
@@ -172,7 +172,7 @@ class SpotifyRedirectResource(Resource):
             print(e)
             return_status = HTTPStatus.NOT_FOUND
         
-        return data, return_status
+        return data, return_status, {'Access-Control-Allow-Headers': "Origin, X-Requested-With, Content-Type, Accept, x-auth"}
 
 class SpotifyUserResource(Resource):
 
@@ -185,7 +185,7 @@ class SpotifyUserResource(Resource):
 
     def get(self, code):
         return_status = HTTPStatus.OK
-        data = {}
+        data = jsonify()
         access_token = None
 
         # Check to see if spotify session already active
@@ -204,11 +204,27 @@ class SpotifyUserResource(Resource):
             sp = spotipy.Spotify(auth=access_token)
             data = self._convert_params(sp.current_user())
             session['spotify_token'] = access_token
+            session.modified = True
         except Exception as e:
             print(e)
             return_status = HTTPStatus.NOT_FOUND
+
+        return data, return_status, {'Access-Control-Allow-Headers': "Origin, X-Requested-With, Content-Type, Accept, x-auth"}
+
+class SpotifyPlaylistsResource(Resource):
+    def get(self):
+        return_status = HTTPStatus.OK
+        data = {}
+
+        try:
+            access_token = session['spotify_token']
+            sp = spotipy.Spotify(auth=access_token)
+            data = sp.current_user_playlists()
+        except Exception as e:
+            print(e)
+            return_status, HTTPStatus.NOT_FOUND
         
-        return data, return_status
+        return data, return_status, {'Access-Control-Allow-Headers': "Origin, X-Requested-With, Content-Type, Accept, x-auth"}
 
 api.add_resource(DefaultResource, '/')
 api.add_resource(UsersResource, '/users')
@@ -218,3 +234,4 @@ api.add_resource(RefreshTokenResource, '/refresh')
 api.add_resource(SpotifyAuthResource, '/spotify_auth')
 api.add_resource(SpotifyRedirectResource, '/spotify_redirect')
 api.add_resource(SpotifyUserResource, '/spotify_user/<string:code>')
+api.add_resource(SpotifyPlaylistsResource, '/playlists')

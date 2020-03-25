@@ -12,7 +12,7 @@ from spotipy import oauth2
 
 app = Flask(__name__)
 app.config.from_object(Config)
-CORS(app)
+CORS(app, supports_credentials=True)
 
 api_bp = Blueprint('api', __name__)
 api = Api(api_bp)

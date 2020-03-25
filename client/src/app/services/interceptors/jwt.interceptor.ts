@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpRequest, HttpHandler, HttpEvent, HttpInterceptor } from '@angular/common/http';
+import { HttpRequest, HttpHandler, HttpEvent, HttpInterceptor, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { LoginService } from '../login.service';
 import { environment } from '@env/environment';
@@ -20,8 +20,9 @@ export class JwtInterceptor implements HttpInterceptor {
             const token = currentUser.accessToken;
             request = request.clone({
                 setHeaders: {
-                    Authorization: `Bearer ${token}`
-                }
+                    'Authorization': `Bearer ${token}`,
+                },
+                withCredentials: true
             });
         }
 

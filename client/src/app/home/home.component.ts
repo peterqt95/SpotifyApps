@@ -18,8 +18,8 @@ import { SpotifyUser } from '@app/models/SpotifyUser';
 })
 export class HomeComponent implements OnInit{
 
-  // User notes
-  leetcodeNotes: LeetcodeNote[] = [];
+  // SpotifyUser
+  spotifyUser: SpotifyUser = new SpotifyUser;
 
   // Load status
   loadStatus: LoadStatus = new LoadStatus();
@@ -40,16 +40,29 @@ export class HomeComponent implements OnInit{
   }
 
   ngOnInit() {
-    // this.getLeetcodeNotes(this.loginService.currentUserValue.userId);
     this.getSpotifyLogin();
   }
 
   private getSpotifyLogin(): void {
-    // this.spotifyService.getSpotifyAuthToken().subscribe(this.getSpotifyLoginSub());
-
     this.spotifyService.getSpotifyAuthToken().pipe(mergeMap( (results: SpotifyAuthUrl) => {
       return this.getSpotifyUser(results);
     })).subscribe(this.getSpotifyUserSub());
+  }
+
+  private getSpotifyCurrentUserPlaylists(): void {
+    this.spotifyService.getSpotifyCurrentUserPlaylists().subscribe(this.getSpotifyCurrentUserPlaylistSub());
+  }
+
+  private getSpotifyCurrentUserPlaylistSub(): PartialObserver<any> {
+    return {
+      next: (results: any) => {
+        console.log(results);
+      },
+      error: (err) => {
+        console.log(err);
+      },
+      complete: () => {}
+    };
   }
 
   private getSpotifyUser(results: SpotifyAuthUrl): Observable<any> {
@@ -66,7 +79,10 @@ export class HomeComponent implements OnInit{
   private getSpotifyUserSub(): PartialObserver<any> {
     return {
       next: (results: SpotifyUser) => {
-        console.log(results);
+        this.spotifyUser = results;
+
+        // Fetch user playlists
+        this.getSpotifyCurrentUserPlaylists();
       },
       error: (err) => {
         // Need to route back to login
@@ -78,22 +94,4 @@ export class HomeComponent implements OnInit{
       }
     };
   }
-
-  private getLeetcodeNotes(userId: number): void {
-    this.leetcodeService.get({userId}).subscribe(this.getLeetcodeNotesSub());
-  }
-
-  private getLeetcodeNotesSub(): PartialObserver<any> {
-    return {
-      next: (results) => {
-        this.leetcodeNotes = results;
-        this.dataSource = new MatTableDataSource(this.leetcodeNotes);
-        this.dataSource.paginator = this.paginator;
-      },
-      complete: () => {
-        this.loadStatus.isLoaded = true;
-      }
-    };
-  }
-
 }

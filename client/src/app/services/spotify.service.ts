@@ -42,6 +42,10 @@ export class SpotifyService {
     );
   }
 
+  public getSpotifyCurrentUserPlaylists() {
+    return this.http.get<any>(this.flaskUrl + '/playlists');
+  }
+
   // Need to move to utility
   private buildParams(parameters: any): HttpParams {
     let httpParams = new HttpParams();
