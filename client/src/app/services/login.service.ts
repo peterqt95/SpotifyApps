@@ -18,7 +18,7 @@ export class LoginService {
   public currentUser: Observable<User>;
 
   constructor(
-    private http: HttpClient
+    private http: HttpClient,
   ) {
     this.currentUserSubject = new BehaviorSubject<User>(JSON.parse(localStorage.getItem('currentUser')));
     this.currentUser = this.currentUserSubject.asObservable();
@@ -47,7 +47,11 @@ export class LoginService {
   }
 
   public logout() {
-    localStorage.removeItem('currentUser');
+    localStorage.clear();
+    sessionStorage.clear();
+    // ToDo
+    // Need to remove session cookie when we log out because im too dumb to get a refresh token
+    // document.cookie = 'session=; Max-Age=0';
     this.currentUserSubject.next(null);
   }
 }

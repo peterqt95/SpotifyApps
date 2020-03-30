@@ -6,6 +6,16 @@
     align-items: center;
 }
 
-.problem-container {
-    width: 800px;
+.playlist-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.flex-item {
+    max-width: 400px;
+    flex: 1 0 21%;
+    margin: 8px;
 }

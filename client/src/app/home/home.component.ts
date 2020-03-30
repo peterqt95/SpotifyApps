@@ -10,6 +10,7 @@ import { SpotifyAuthUrl } from '@app/models/SpotifyAuthUrl';
 import { Router, ActivatedRoute } from '@angular/router';
 import { switchMap, mergeMap } from 'rxjs/operators';
 import { SpotifyUser } from '@app/models/SpotifyUser';
+import { SpotifyPlaylistInfo } from '@app/models/SpotifyPlaylist';
 
 @Component({
   selector: 'app-home',
@@ -20,6 +21,9 @@ export class HomeComponent implements OnInit{
 
   // SpotifyUser
   spotifyUser: SpotifyUser = new SpotifyUser;
+
+  // SpotifyPlaylistInfos
+  spotifyPlaylists: SpotifyPlaylistInfo[] = [];
 
   // Load status
   loadStatus: LoadStatus = new LoadStatus();
@@ -55,13 +59,16 @@ export class HomeComponent implements OnInit{
 
   private getSpotifyCurrentUserPlaylistSub(): PartialObserver<any> {
     return {
-      next: (results: any) => {
+      next: (results: SpotifyPlaylistInfo[]) => {
+        this.spotifyPlaylists = results;
         console.log(results);
       },
       error: (err) => {
         console.log(err);
       },
-      complete: () => {}
+      complete: () => {
+        this.loadStatus.isLoaded = true;
+      }
     };
   }
 
@@ -80,9 +87,6 @@ export class HomeComponent implements OnInit{
     return {
       next: (results: SpotifyUser) => {
         this.spotifyUser = results;
-
-        // Fetch user playlists
-        this.getSpotifyCurrentUserPlaylists();
       },
       error: (err) => {
         // Need to route back to login
@@ -90,7 +94,8 @@ export class HomeComponent implements OnInit{
         this.router.navigate(['/login']);
       },
       complete: () => {
-        this.loadStatus.isLoaded = true;
+        // Fetch user playlists
+        this.getSpotifyCurrentUserPlaylists();
       }
     };
   }

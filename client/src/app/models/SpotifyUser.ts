@@ -1,4 +1,6 @@
-export class SpotifyUser {
+import { BaseModel } from './BaseModel';
+
+export class SpotifyUser extends BaseModel {
     country: string = null;
     displayName: string = null;
     email: string = null;
@@ -6,17 +8,9 @@ export class SpotifyUser {
     id: string = null;
 
     constructor(instanceData?: SpotifyUser) {
+        super(instanceData);
         if (instanceData) {
-            this.deserialize(instanceData);
+            this.deserialize(instanceData, this);
         }
-    }
-
-    private deserialize(instanceData: SpotifyUser) {
-        const keys = Object.keys(this);
-        keys.forEach(key => {
-            if (instanceData.hasOwnProperty(key)) {
-                this[key] = instanceData[key];
-            }
-        });
     }
 }

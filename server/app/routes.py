@@ -148,9 +148,10 @@ class RefreshTokenResource(Resource):
         else:
             status.error = "Invalid refresh token"
 
-        return status.to_json(), return_status
+        return status.to_json(), return_status, {'Access-Control-Allow-Headers': "Origin, X-Requested-With, Content-Type, Accept, x-auth"}
 
 class SpotifyAuthResource(Resource):
+
     def get(self):
         return_status = HTTPStatus.OK
         data = {}
@@ -160,9 +161,10 @@ class SpotifyAuthResource(Resource):
             print(e)
             return_status = HTTPStatus.NOT_FOUND
         
-        return data, return_status
+        return data, return_status, {'Access-Control-Allow-Headers': "Origin, X-Requested-With, Content-Type, Accept, x-auth"}
 
 class SpotifyRedirectResource(Resource):
+
     def get(self):
         return_status = HTTPStatus.OK
         data = {}
@@ -212,6 +214,7 @@ class SpotifyUserResource(Resource):
         return data, return_status, {'Access-Control-Allow-Headers': "Origin, X-Requested-With, Content-Type, Accept, x-auth"}
 
 class SpotifyPlaylistsResource(Resource):
+
     def get(self):
         return_status = HTTPStatus.OK
         data = {}
@@ -220,6 +223,63 @@ class SpotifyPlaylistsResource(Resource):
             access_token = session['spotify_token']
             sp = spotipy.Spotify(auth=access_token)
             data = sp.current_user_playlists()
+            playlists = data["items"]
+            final_data = []
+
+            # Get info for playlists
+            for playlist in playlists:
+                playlist_info = {}
+                playlist_info["name"] = playlist["name"]
+                playlist_info["id"] = playlist["id"]
+                playlist_info["owner"] = playlist["owner"]["id"]
+                playlist_info["externalUrl"] = playlist["external_urls"]["spotify"]
+                playlist_info["image"] = playlist["images"][0]["url"] if len(playlist["images"]) > 0 else None
+                playlist_info["playlistLength"] = playlist["tracks"]["total"]
+                final_data.append(playlist_info)
+
+            data = final_data
+        except Exception as e:
+            print(e)
+            return_status, HTTPStatus.NOT_FOUND
+        
+        return data, return_status, {'Access-Control-Allow-Headers': "Origin, X-Requested-With, Content-Type, Accept, x-auth"}
+
+class SpotifyPlaylistTracksResource(Resource):
+
+    def _get_artists(self, artists):
+        artists_info = []
+        for artist in artists:
+            artist_info = {}
+            artist_info["name"] = artist["name"]
+            artist_info["id"] = artist["id"]
+            artist_info["artistUrl"] = artist["external_urls"]["spotify"]
+            artists_info.append(artist_info)
+        
+        return artists_info
+
+    def get(self, user, id):
+        return_status = HTTPStatus.OK
+        data = []
+
+        try:
+            access_token = session['spotify_token']
+            sp = spotipy.Spotify(auth=access_token)
+            track_response = sp.user_playlist_tracks(user, id)
+            tracks = track_response["items"]
+
+            # Return all track information for playlist
+            for track in tracks:
+                track_info = {}
+                _track = track["track"]
+                track_info["album"] = _track["album"]["name"]
+                track_info["albumId"] = _track["album"]["id"]
+                track_info["albumUrl"] = _track["album"]["external_urls"]["spotify"]
+                track_info["artists"] = self._get_artists(_track["artists"])
+                track_info["url"] = _track["external_urls"]["spotify"]
+                track_info["name"] = _track["name"]
+                track_info["duration"] = _track["duration_ms"]
+                data.append(track_info)
+
         except Exception as e:
             print(e)
             return_status, HTTPStatus.NOT_FOUND
@@ -235,3 +295,4 @@ api.add_resource(SpotifyAuthResource, '/spotify_auth')
 api.add_resource(SpotifyRedirectResource, '/spotify_redirect')
 api.add_resource(SpotifyUserResource, '/spotify_user/<string:code>')
 api.add_resource(SpotifyPlaylistsResource, '/playlists')
+api.add_resource(SpotifyPlaylistTracksResource, '/user/<string:user>/playlist/<string:id>/tracks')

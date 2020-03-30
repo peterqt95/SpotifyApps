@@ -15,12 +15,14 @@ import { HomeComponent } from './home/home.component';
 import { JwtInterceptor } from './services/interceptors/jwt.interceptor';
 import { ErrorInterceptor } from './services/interceptors/error.interceptor';
 import { SharedModule } from './shared/shared.module';
+import { PlaylistComponent } from './playlist/playlist.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     LoginPageComponent,
-    HomeComponent
+    HomeComponent,
+    PlaylistComponent
   ],
   imports: [
     BrowserModule,

@@ -1,18 +1,12 @@
-export class SpotifyAuthUrl {
+import { BaseModel } from './BaseModel';
+
+export class SpotifyAuthUrl extends BaseModel {
     authUrl: string = null;
 
     constructor(instanceData?: SpotifyAuthUrl) {
+        super(instanceData);
         if (instanceData) {
-            this.deserialize(instanceData);
+            this.deserialize(instanceData, this);
         }
-    }
-
-    private deserialize(instanceData: SpotifyAuthUrl) {
-        const keys = Object.keys(this);
-        keys.forEach(key => {
-            if (instanceData.hasOwnProperty(key)) {
-                this[key] = instanceData[key];
-            }
-        });
     }
 }

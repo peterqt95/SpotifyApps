@@ -4,6 +4,8 @@ import { environment } from '@env/environment';
 import { SpotifyAuthUrl } from '@app/models/SpotifyAuthUrl';
 import { map } from 'rxjs/operators';
 import { SpotifyUser } from '@app/models/SpotifyUser';
+import { SpotifyPlaylistInfo } from '@app/models/SpotifyPlaylist';
+import { LoginService } from './login.service';
 
 const flaskUrl = environment.flaskApi;
 
@@ -15,7 +17,7 @@ export class SpotifyService {
   flaskUrl = flaskUrl;
 
   constructor(
-    private http: HttpClient
+    private http: HttpClient,
   ) { }
 
   public getSpotifyAuthToken() {
@@ -43,7 +45,21 @@ export class SpotifyService {
   }
 
   public getSpotifyCurrentUserPlaylists() {
-    return this.http.get<any>(this.flaskUrl + '/playlists');
+    return this.http.get<SpotifyPlaylistInfo[]>(this.flaskUrl + '/playlists').pipe(
+      map((results: SpotifyPlaylistInfo[]) => {
+        const returnResults = [];
+        if (results) {
+          results.forEach(result => {
+            returnResults.push(new SpotifyPlaylistInfo(result));
+          });
+        }
+        return returnResults;
+      })
+    );
+  }
+
+  public getPlaylistTracks(user: string, playlistId: string) {
+    return this.http.get<any>(this.flaskUrl + '/user/' + user +'/playlist/' + playlistId + '/tracks');
   }
 
   // Need to move to utility
