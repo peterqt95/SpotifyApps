@@ -10,10 +10,11 @@ export class ErrorInterceptor implements HttpInterceptor {
 
     intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
         return next.handle(request).pipe(catchError(err => {
-            if (err.status === 401) {
+            if (err.status >= 400 && err.status < 600) {
                 // Logout if error status of 401
                 this.loginService.logout();
-                location.reload(true);
+                // location.reload(true);
+                window.location.href = "http://localhost:4200/login";
             }
 
             const error = err.error.message || err.statusText;

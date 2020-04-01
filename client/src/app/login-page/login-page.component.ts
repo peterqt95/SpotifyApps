@@ -71,7 +71,7 @@ export class LoginPageComponent implements OnInit {
           this.loadStatus.errorMsg = data.error;
         } else {
           // Route to new component
-          this.router.navigate([this.returnUrl]);
+          this.router.navigate(['/']);
         }
       },
       error: (err) => {

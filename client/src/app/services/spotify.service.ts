@@ -6,6 +6,7 @@ import { map } from 'rxjs/operators';
 import { SpotifyUser } from '@app/models/SpotifyUser';
 import { SpotifyPlaylistInfo } from '@app/models/SpotifyPlaylist';
 import { LoginService } from './login.service';
+import { SpotifyTrack } from '@app/models/SpotifyTrack';
 
 const flaskUrl = environment.flaskApi;
 
@@ -58,8 +59,30 @@ export class SpotifyService {
     );
   }
 
+  public getPlaylistInfo(user: string, playlistId: string) {
+    return this.http.get<SpotifyPlaylistInfo>(this.flaskUrl + '/user/' + user + '/playlist/' + playlistId).pipe(
+      map((result: SpotifyPlaylistInfo) => {
+        let returnResult = null;
+        if (result) {
+          returnResult = new SpotifyPlaylistInfo(result);
+        }
+        return returnResult;
+      })
+    );
+  }
+
   public getPlaylistTracks(user: string, playlistId: string) {
-    return this.http.get<any>(this.flaskUrl + '/user/' + user +'/playlist/' + playlistId + '/tracks');
+    return this.http.get<SpotifyTrack[]>(this.flaskUrl + '/user/' + user + '/playlist/' + playlistId + '/tracks').pipe(
+      map((results: SpotifyTrack[]) => {
+        const returnResults = [];
+        if (results) {
+          results.forEach(result => {
+            returnResults.push(new SpotifyTrack(result));
+          });
+        }
+        return returnResults;
+      })
+    );
   }
 
   // Need to move to utility

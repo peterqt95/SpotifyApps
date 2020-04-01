@@ -49,9 +49,6 @@ export class LoginService {
   public logout() {
     localStorage.clear();
     sessionStorage.clear();
-    // ToDo
-    // Need to remove session cookie when we log out because im too dumb to get a refresh token
-    // document.cookie = 'session=; Max-Age=0';
     this.currentUserSubject.next(null);
   }
 }

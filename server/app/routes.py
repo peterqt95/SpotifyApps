@@ -11,6 +11,17 @@ from flask_jwt_extended import (
 import spotipy
 import spotipy.util as sp_util
 
+# Utility function
+# Converts ms to min:second format
+def convert_ms_to_min_sec(ms):
+    minutes = str(int(ms / (1000 * 60) % 60))
+    seconds = str(int((ms / 1000) % 60))
+    
+    # Prepend zero if seconds is length 1
+    if len(seconds) == 1:
+        seconds = '0' + seconds
+    return (minutes + ":" + seconds)
+
 class Error():
     def __init__(self):
         self.status = False
@@ -155,6 +166,10 @@ class SpotifyAuthResource(Resource):
     def get(self):
         return_status = HTTPStatus.OK
         data = {}
+
+        if 'spotify_token' in session:
+            del session['spotify_token']
+
         try:
             data['authUrl'] = sp_oauth.get_authorize_url()
         except Exception as e:
@@ -240,7 +255,7 @@ class SpotifyPlaylistsResource(Resource):
             data = final_data
         except Exception as e:
             print(e)
-            return_status, HTTPStatus.NOT_FOUND
+            return_status = HTTPStatus.NOT_FOUND
         
         return data, return_status, {'Access-Control-Allow-Headers': "Origin, X-Requested-With, Content-Type, Accept, x-auth"}
 
@@ -277,14 +292,41 @@ class SpotifyPlaylistTracksResource(Resource):
                 track_info["artists"] = self._get_artists(_track["artists"])
                 track_info["url"] = _track["external_urls"]["spotify"]
                 track_info["name"] = _track["name"]
-                track_info["duration"] = _track["duration_ms"]
+                track_info["duration"] = convert_ms_to_min_sec(_track["duration_ms"])
                 data.append(track_info)
 
         except Exception as e:
             print(e)
-            return_status, HTTPStatus.NOT_FOUND
+            return_status = HTTPStatus.NOT_FOUND
         
         return data, return_status, {'Access-Control-Allow-Headers': "Origin, X-Requested-With, Content-Type, Accept, x-auth"}
+
+class SpotifyPlaylistInfoResource(Resource):
+
+    def _convert_params(self, data):
+        temp = {}
+        temp["name"] = data["name"]
+        temp["id"] = data["id"]
+        temp["owner"] = data["owner"]["id"]
+        temp["externalUrl"] = data["external_urls"]["spotify"]
+        temp["image"] = data["images"][0]["url"] if len(data["images"]) > 0 else None
+        temp["playlistLength"] = data["tracks"]["total"]
+        return temp
+
+    def get(self, user, id):
+        return_status = HTTPStatus.OK
+        data = {}
+
+        try:
+            access_token = session['spotify_token']
+            sp = spotipy.Spotify(auth=access_token)
+            data = self._convert_params(sp.user_playlist(user, id))
+        except Exception as e:
+            print(e)
+            return_status = HTTPStatus.NOT_FOUND
+        
+        return data, return_status, {'Access-Control-Allow-Headers': "Origin, X-Requested-With, Content-Type, Accept, x-auth"}
+
 
 api.add_resource(DefaultResource, '/')
 api.add_resource(UsersResource, '/users')
@@ -295,4 +337,5 @@ api.add_resource(SpotifyAuthResource, '/spotify_auth')
 api.add_resource(SpotifyRedirectResource, '/spotify_redirect')
 api.add_resource(SpotifyUserResource, '/spotify_user/<string:code>')
 api.add_resource(SpotifyPlaylistsResource, '/playlists')
+api.add_resource(SpotifyPlaylistInfoResource, '/user/<string:user>/playlist/<string:id>')
 api.add_resource(SpotifyPlaylistTracksResource, '/user/<string:user>/playlist/<string:id>/tracks')

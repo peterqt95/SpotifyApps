@@ -1,14 +1,11 @@
 import { Component, OnInit, AfterViewInit, ViewChild } from '@angular/core';
 import { LoginService } from '@app/services/login.service';
-import { LeetcodeNote } from '@app/models/LeetcodeNote';
-import { LeetcodeNoteService } from '@app/services/leetcode-note.service';
 import { PartialObserver, Observable } from 'rxjs';
 import { LoadStatus } from '@app/shared/Classes/LoadStatus';
-import { MatPaginator, MatSort, MatTableDataSource } from '@angular/material';
 import { SpotifyService } from '@app/services/spotify.service';
 import { SpotifyAuthUrl } from '@app/models/SpotifyAuthUrl';
-import { Router, ActivatedRoute } from '@angular/router';
-import { switchMap, mergeMap } from 'rxjs/operators';
+import { Router } from '@angular/router';
+import { mergeMap } from 'rxjs/operators';
 import { SpotifyUser } from '@app/models/SpotifyUser';
 import { SpotifyPlaylistInfo } from '@app/models/SpotifyPlaylist';
 
@@ -28,18 +25,10 @@ export class HomeComponent implements OnInit{
   // Load status
   loadStatus: LoadStatus = new LoadStatus();
 
-  // Displayed Columns
-  displayedColumns: string[] = ['myId', 'title', 'edit'];
-  dataSource: MatTableDataSource<LeetcodeNote>;
-
-  @ViewChild(MatPaginator) paginator: MatPaginator;
-
   constructor(
     private loginService: LoginService,
-    private leetcodeService: LeetcodeNoteService,
     private spotifyService: SpotifyService,
     private router: Router,
-    private route: ActivatedRoute,
   ) {
   }
 
