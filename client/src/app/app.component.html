@@ -1,6 +1,6 @@
 <mat-toolbar color="primary">
   <mat-toolbar-row>
-    <span>Spotify App</span>
+    <a class="no-link" [routerLink]="['/']">Spotify App</a>
     <span class="toolbar-spacer"></span>
     <span *ngIf="currentUser">
       <span class="user">Logged in as: {{currentUser.name}}</span>

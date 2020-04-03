@@ -4,9 +4,13 @@ import { ActivatedRoute } from '@angular/router';
 import { Subscriber, Subscription, PartialObserver, forkJoin } from 'rxjs';
 import { LoadStatus } from '@app/shared/Classes/LoadStatus';
 import { LoginService } from '@app/services/login.service';
-import { MatPaginator, MatSort, MatTableDataSource } from '@angular/material';
+import { MatPaginator, MatSort, MatTableDataSource, MatDialog } from '@angular/material';
 import { SpotifyTrack } from '@app/models/SpotifyTrack';
 import { SpotifyPlaylistInfo } from '@app/models/SpotifyPlaylist';
+import { OutlierModalComponent } from './outlier-modal/outlier-modal.component';
+import { ModalComponentFactoryComponent } from '@app/shared/Components/modal-component-factory/modal-component-factory.component';
+import { ModalItem } from '@app/shared/Classes/ModalItem';
+import { OutlierData } from '@app/models/OutlierData';
 
 
 @Component({
@@ -42,7 +46,8 @@ export class PlaylistComponent implements OnInit, OnDestroy {
 
   constructor(
     private spotifyService: SpotifyService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private dialog: MatDialog,
   ) {
     // Get route
     this.idSub = this.route.params.subscribe(params => {
@@ -88,6 +93,15 @@ export class PlaylistComponent implements OnInit, OnDestroy {
   public applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
+  }
+
+  public openOutlierModal(): void {
+    const MODAL_TITLE = 'Song Outliers';
+    const outlierData = new OutlierData(this.spotifyTracks);
+    const dialogRef = this.dialog.open(ModalComponentFactoryComponent, {
+      width: '500px',
+      data: new ModalItem(OutlierModalComponent, MODAL_TITLE, outlierData)
+    });
   }
 
 }

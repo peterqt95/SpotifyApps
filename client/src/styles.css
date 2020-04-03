@@ -8,3 +8,16 @@ body {
 .flex-grow {
     flex-grow: 1;
 }
+
+.center {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.no-link {
+    text-decoration: inherit;
+    color: inherit;
+}

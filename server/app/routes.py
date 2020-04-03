@@ -292,6 +292,7 @@ class SpotifyPlaylistTracksResource(Resource):
                 track_info["artists"] = self._get_artists(_track["artists"])
                 track_info["url"] = _track["external_urls"]["spotify"]
                 track_info["name"] = _track["name"]
+                track_info["id"] = _track["id"]
                 track_info["duration"] = convert_ms_to_min_sec(_track["duration_ms"])
                 data.append(track_info)
 
@@ -328,6 +329,40 @@ class SpotifyPlaylistInfoResource(Resource):
         return data, return_status, {'Access-Control-Allow-Headers': "Origin, X-Requested-With, Content-Type, Accept, x-auth"}
 
 
+class SpotifyTrackAudioFeaturesResource(Resource):
+
+    def _convert_params(self, audio_feature):
+        # Convert params
+        audio_feature['duration'] = convert_ms_to_min_sec(audio_feature['duration_ms'])
+
+        # Remove unneccessary params
+        del audio_feature['type']
+        del audio_feature['track_href']
+        del audio_feature['analysis_url']
+        del audio_feature['uri']
+        del audio_feature['duration_ms']
+
+        return audio_feature
+
+    @jwt_required
+    def get(self):
+        track_ids = request.args.getlist('tracks')
+        return_status = HTTPStatus.OK
+        data = []
+
+        try:
+            access_token = session['spotify_token']
+            sp = spotipy.Spotify(auth=access_token)
+            audio_features = sp.audio_features(track_ids)
+            for audio_feature in audio_features:
+                data.append(self._convert_params(audio_feature))
+
+        except Exception as e:
+            print(e)
+            return_status = HTTPStatus.NOT_FOUND
+        
+        return data, return_status, {'Access-Control-Allow-Headers': "Origin, X-Requested-With, Content-Type, Accept, x-auth"}
+    
 api.add_resource(DefaultResource, '/')
 api.add_resource(UsersResource, '/users')
 api.add_resource(UserResource, '/users/<int:id>')
@@ -339,3 +374,4 @@ api.add_resource(SpotifyUserResource, '/spotify_user/<string:code>')
 api.add_resource(SpotifyPlaylistsResource, '/playlists')
 api.add_resource(SpotifyPlaylistInfoResource, '/user/<string:user>/playlist/<string:id>')
 api.add_resource(SpotifyPlaylistTracksResource, '/user/<string:user>/playlist/<string:id>/tracks')
+api.add_resource(SpotifyTrackAudioFeaturesResource, '/audio_features')

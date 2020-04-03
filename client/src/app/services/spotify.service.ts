@@ -85,6 +85,10 @@ export class SpotifyService {
     );
   }
 
+  public getTrackAudioFeatures(tracks: string[]) {
+    return this.http.get<any>(this.flaskUrl + '/audio_features', { params: this.buildParams({tracks: tracks}) });
+  }
+
   // Need to move to utility
   private buildParams(parameters: any): HttpParams {
     let httpParams = new HttpParams();

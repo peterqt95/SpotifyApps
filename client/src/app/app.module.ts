@@ -16,13 +16,16 @@ import { JwtInterceptor } from './services/interceptors/jwt.interceptor';
 import { ErrorInterceptor } from './services/interceptors/error.interceptor';
 import { SharedModule } from './shared/shared.module';
 import { PlaylistComponent } from './playlist/playlist.component';
+import { OutlierModalComponent } from './playlist/outlier-modal/outlier-modal.component';
+import { ModalComponentFactoryComponent } from './shared/Components/modal-component-factory/modal-component-factory.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     LoginPageComponent,
     HomeComponent,
-    PlaylistComponent
+    PlaylistComponent,
+    OutlierModalComponent,
   ],
   imports: [
     BrowserModule,
@@ -35,6 +38,9 @@ import { PlaylistComponent } from './playlist/playlist.component';
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true }
+  ],
+  entryComponents: [
+    OutlierModalComponent
   ],
   bootstrap: [AppComponent]
 })

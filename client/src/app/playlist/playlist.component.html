@@ -1,5 +1,9 @@
 <div class="container">
-  <h1 *ngIf="loadStatus.isLoaded && !loadStatus.isError">{{spotifyPlaylistInfo.name}}</h1>
+  <div class="header">
+    <h1 *ngIf="loadStatus.isLoaded && !loadStatus.isError">{{spotifyPlaylistInfo.name}}</h1>
+  </div>
+
+  <app-loader *ngIf="!loadStatus.isLoaded"></app-loader>
 
   <div class="tracks-container">
     <div class="tracks-header">
@@ -38,5 +42,9 @@
       <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
       <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
     </mat-table>
+  </div>
+
+  <div class="footer">
+    <button mat-flat-button color="primary" (click)="openOutlierModal()">Find Outliers</button>
   </div>
 </div>

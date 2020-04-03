@@ -8,6 +8,7 @@
 
 .tracks-container {
     width: 75%;
+    padding: 16px;
 }
 
 .tracks-header {
@@ -15,9 +16,4 @@
     flex-direction: row;
     justify-content: center;
     align-items: center;
-    /* padding: 16px; */
-}
-
-.tracks {
-    /* width: 75%; */
 }
