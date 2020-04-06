@@ -7,6 +7,8 @@ import { SpotifyUser } from '@app/models/SpotifyUser';
 import { SpotifyPlaylistInfo } from '@app/models/SpotifyPlaylist';
 import { LoginService } from './login.service';
 import { SpotifyTrack } from '@app/models/SpotifyTrack';
+import { SpotifyTrackFeatures } from '@app/models/SpotifyTrackFeatures';
+import { SpotifyAudioAnalysis } from '@app/models/SpotifyAudioAnalysis';
 
 const flaskUrl = environment.flaskApi;
 
@@ -86,7 +88,30 @@ export class SpotifyService {
   }
 
   public getTrackAudioFeatures(tracks: string[]) {
-    return this.http.get<any>(this.flaskUrl + '/audio_features', { params: this.buildParams({tracks: tracks}) });
+    return this.http.get<SpotifyTrackFeatures[]>(this.flaskUrl + '/audio_features', { params: this.buildParams({tracks: tracks}) }).pipe(
+      map((results: SpotifyTrackFeatures[]) => {
+        const returnResults = [];
+        if (results) {
+          results.forEach(result => {
+            returnResults.push(new SpotifyTrackFeatures(result));
+          });
+        }
+        return returnResults;
+      })
+    );
+  }
+
+  public getPlaylistAudioAnalysis(trackFeatures: string) {
+    return this.http.get<SpotifyAudioAnalysis>(this.flaskUrl + '/audio_analysis',
+      { params: this.buildParams({trackFeatures: trackFeatures}) }).pipe(
+        map((result: SpotifyAudioAnalysis) => {
+          let returnResult = null;
+          if (result) {
+            returnResult = new SpotifyAudioAnalysis(result);
+          }
+          return returnResult;
+        })
+    );
   }
 
   // Need to move to utility
