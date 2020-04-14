@@ -99,7 +99,7 @@ export class PlaylistComponent implements OnInit, OnDestroy {
     const MODAL_TITLE = 'Song Outliers';
     const outlierData = new OutlierData(this.spotifyTracks);
     const dialogRef = this.dialog.open(ModalComponentFactoryComponent, {
-      width: '500px',
+      width: '800px',
       data: new ModalItem(OutlierModalComponent, MODAL_TITLE, outlierData)
     });
   }

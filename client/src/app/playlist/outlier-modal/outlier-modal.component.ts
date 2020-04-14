@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, ViewChild } from '@angular/core';
 import { ModalComponent } from '@app/shared/Classes/ModalComponent';
 import { OutlierData } from '@app/models/OutlierData';
 import { SpotifyTrack } from '@app/models/SpotifyTrack';
@@ -8,7 +8,11 @@ import { PartialModule } from '@angular/compiler';
 import { PartialObserver } from 'rxjs';
 import { SpotifyTrackFeatures } from '@app/models/SpotifyTrackFeatures';
 import { mergeMap } from 'rxjs/operators';
-import { SpotifyAudioAnalysis } from '@app/models/SpotifyAudioAnalysis';
+import { SpotifyAudioAnalysis, DescriptiveStats } from '@app/models/SpotifyAudioAnalysis';
+import { MatTableDataSource, MatPaginator } from '@angular/material';
+import { GroupedBarChartComponent } from '@app/shared/Components/ngx-charts/grouped-bar-chart/grouped-bar-chart.component';
+import { GroupedBarChartData } from '@app/shared/Classes/ngx-charts/GroupedBarChartData';
+import { ChartDataPoint } from '@app/shared/Classes/ngx-charts/ChartDataPoint';
 
 @Component({
   selector: 'app-outlier-modal',
@@ -28,8 +32,20 @@ export class OutlierModalComponent implements OnInit, ModalComponent {
   // Outliers
   outliers: SpotifyTrack[] = [];
 
-  // Load Status
+  // Table Load Status
   loadStatus: LoadStatus = new LoadStatus();
+
+  // Full Details Load status
+  detailsLoadStatus: LoadStatus = new LoadStatus();
+
+  // Track comparisson details
+  trackFeatureComparissonData: GroupedBarChartData[] = [];
+
+  // Displayed Columns
+  displayedColumns: string[] = ['name', 'artists', 'album', 'duration', 'analysis'];
+  dataSource: MatTableDataSource<SpotifyTrack>;
+  
+  @ViewChild(MatPaginator) paginator: MatPaginator;
 
   constructor(
     private spotifyService: SpotifyService
@@ -59,11 +75,53 @@ export class OutlierModalComponent implements OnInit, ModalComponent {
         const tracks: SpotifyTrack[] = this.data.tracks;
         this.outliers = tracks.filter(track => this.audioAnalysis.outliers.includes(track.id));
 
-        console.log(this.outliers);
+        // Set the table
+        this.dataSource = new MatTableDataSource(this.outliers);
+        this.dataSource.paginator = this.paginator;
       },
       error: (err) => {},
       complete: () => { this.loadStatus.isLoaded = true; }
     };
+  }
+
+  public applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+  }
+
+  public showFullDetails(trackId: string): void {
+    // Build chart data
+    // let trackFeatureComparissonData: GroupedBarChartData[] = [];
+    const currentTrackFeatures = this.trackFeatures.find(track => track.id === trackId);
+    const featureNames = ['danceability', 'energy', 'speechiness', 'acousticness', 'instrumentalness', 'liveness', 'valence', 'tempo'];
+    featureNames.forEach(feature => {
+      // Get the average of the entire playlist
+      const playlistFeatureStats = this.audioAnalysis.featureDescriptions.find((stats: DescriptiveStats) => stats.type === feature);
+      
+      // Add the series data for the chart
+      const seriesData: ChartDataPoint[] = [];
+      const currentFeatureStat = new ChartDataPoint({name: 'Current', value: currentTrackFeatures[feature]});
+      const playlistStat = new ChartDataPoint({name: 'Average', value: playlistFeatureStats.mean});
+      seriesData.push(currentFeatureStat, playlistStat);
+
+      // Scale tempo down
+      if (feature === 'tempo') {
+        seriesData[0].value = seriesData[0].value / 100;
+        seriesData[1].value = seriesData[1].value / 100;
+      }
+
+      // Add to GroupedBarChart Data
+      this.trackFeatureComparissonData.push(new GroupedBarChartData({name: feature, series: seriesData}));
+    });
+
+    // Set which components loaded
+    this.loadStatus.isLoaded = false;
+    this.detailsLoadStatus.isLoaded = true;
+  }
+
+  public back(): void {
+    this.loadStatus.isLoaded = true;
+    this.detailsLoadStatus.isLoaded = false;
   }
 
 }

@@ -1,4 +1,59 @@
-<app-loader *ngIf="!loadStatus.isLoaded" class="container"></app-loader>
-<p>
-  outlier-modal works!
-</p>
+<app-loader *ngIf="!loadStatus.isLoaded && !detailsLoadStatus.isLoaded" class="container"></app-loader>
+<div class="container">
+  <div class="tracks-container" [hidden]="!loadStatus.isLoaded">
+    <div class="tracks-header">
+      <mat-form-field>
+        <mat-label>Filter</mat-label>
+        <input matInput (keyup)="applyFilter($event)">
+      </mat-form-field>
+      <div class="flex-grow"></div>
+      <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+    </div>
+    <mat-table [dataSource]="dataSource" class="tracks">
+      <ng-container matColumnDef="name">
+        <mat-header-cell *matHeaderCellDef> Name </mat-header-cell>
+        <mat-cell *matCellDef="let row"> {{row.name}} </mat-cell>
+      </ng-container>
+    
+      <ng-container matColumnDef="artists">
+        <mat-header-cell *matHeaderCellDef> Artists </mat-header-cell>
+        <mat-cell *matCellDef="let row"> {{row.artists[0].name}} </mat-cell>
+      </ng-container>
+    
+      <ng-container matColumnDef="album">
+        <mat-header-cell *matHeaderCellDef> Album </mat-header-cell>
+        <mat-cell *matCellDef="let row">
+          <a mat-icon-button>
+            {{row.album}}
+          </a>
+        </mat-cell>
+      </ng-container>
+    
+      <ng-container matColumnDef="duration">
+        <mat-header-cell *matHeaderCellDef> Time </mat-header-cell>
+        <mat-cell *matCellDef="let row"> {{row.duration}} </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="analysis">
+        <mat-header-cell *matHeaderCellDef> Analysis </mat-header-cell>
+        <mat-cell *matCellDef="let row" (click)="showFullDetails(row.id)"> Full Details </mat-cell>
+      </ng-container>
+    
+      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+      <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+    </mat-table>
+  </div>
+
+  <div *ngIf="detailsLoadStatus.isLoaded">
+    <button
+      mat-icon-button
+      matSuffix
+      color="primary"
+      type="button"
+      (click)="back()">
+      <mat-icon>keyboard_arrow_left</mat-icon> Back
+    </button>
+    <!-- Insert chart -->
+    <app-grouped-bar-chart [results]="trackFeatureComparissonData"></app-grouped-bar-chart>
+  </div>
+</div>
