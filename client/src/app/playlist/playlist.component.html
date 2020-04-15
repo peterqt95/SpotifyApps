@@ -12,7 +12,7 @@
         <input matInput (keyup)="applyFilter($event)">
       </mat-form-field>
       <div class="flex-grow"></div>
-      <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+      <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" [pageSize]="100"></mat-paginator>
     </div>
     <mat-table [dataSource]="dataSource" class="tracks">
       <ng-container matColumnDef="name">

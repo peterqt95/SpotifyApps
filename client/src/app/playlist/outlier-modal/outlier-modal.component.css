@@ -4,6 +4,7 @@
     justify-content: center;
     align-items: center;
     padding: 16px;
+    min-height: 500px;
 }
 
 .tracks-container {
@@ -16,4 +17,14 @@
     flex-direction: row;
     justify-content: center;
     align-items: center;
+}
+
+.text-left {
+    text-align: left;
+}
+
+.tracks {
+    max-height: 500px;
+    min-height: 500px;
+    overflow: auto;
 }

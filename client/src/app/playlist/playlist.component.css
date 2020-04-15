@@ -17,3 +17,9 @@
     justify-content: center;
     align-items: center;
 }
+
+.tracks {
+    max-height: 500px;
+    min-height: 500px;
+    overflow: auto;
+}

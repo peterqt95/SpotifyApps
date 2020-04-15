@@ -1,5 +1,5 @@
-<app-loader *ngIf="!loadStatus.isLoaded && !detailsLoadStatus.isLoaded" class="container"></app-loader>
 <div class="container">
+  <app-loader *ngIf="!loadStatus.isLoaded && !detailsLoadStatus.isLoaded"></app-loader>
   <div class="tracks-container" [hidden]="!loadStatus.isLoaded">
     <div class="tracks-header">
       <mat-form-field>
@@ -7,7 +7,7 @@
         <input matInput (keyup)="applyFilter($event)">
       </mat-form-field>
       <div class="flex-grow"></div>
-      <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+      <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" [pageSize]="25"></mat-paginator>
     </div>
     <mat-table [dataSource]="dataSource" class="tracks">
       <ng-container matColumnDef="name">
@@ -36,7 +36,9 @@
 
       <ng-container matColumnDef="analysis">
         <mat-header-cell *matHeaderCellDef> Analysis </mat-header-cell>
-        <mat-cell *matCellDef="let row" (click)="showFullDetails(row.id)"> Full Details </mat-cell>
+        <mat-cell *matCellDef="let row">
+          <button mat-flat-button color="primary" (click)="showFullDetails(row.id)">Details</button>
+        </mat-cell>
       </ng-container>
     
       <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
@@ -44,7 +46,7 @@
     </mat-table>
   </div>
 
-  <div *ngIf="detailsLoadStatus.isLoaded">
+  <div *ngIf="detailsLoadStatus.isLoaded" class="text-left">
     <button
       mat-icon-button
       matSuffix
@@ -53,7 +55,6 @@
       (click)="back()">
       <mat-icon>keyboard_arrow_left</mat-icon> Back
     </button>
-    <!-- Insert chart -->
     <app-grouped-bar-chart [results]="trackFeatureComparissonData"></app-grouped-bar-chart>
   </div>
 </div>

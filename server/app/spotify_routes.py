@@ -1,4 +1,5 @@
 import json
+import sys, os
 from app import api, jwt, db, sp_oauth
 from flask import request, session, current_app, jsonify
 from flask_restful import Resource, Api
@@ -22,6 +23,11 @@ def convert_ms_to_min_sec(ms):
     if len(seconds) == 1:
         seconds = '0' + seconds
     return (minutes + ":" + seconds)
+
+def log_error(e):
+    exc_type, exc_obj, exc_tb = sys.exc_info()
+    fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+    print(exc_type, fname, exc_tb.tb_lineno, e)
 
 class SpotifyAuthResource(Resource):
 
@@ -133,7 +139,7 @@ class SpotifyPlaylistTracksResource(Resource):
             artist_info = {}
             artist_info["name"] = artist["name"]
             artist_info["id"] = artist["id"]
-            artist_info["artistUrl"] = artist["external_urls"]["spotify"]
+            artist_info["artistUrl"] = artist["external_urls"].get("spotify", None)
             artists_info.append(artist_info)
         
         return artists_info
@@ -146,25 +152,31 @@ class SpotifyPlaylistTracksResource(Resource):
         try:
             access_token = session['spotify_token']
             sp = spotipy.Spotify(auth=access_token)
-            track_response = sp.user_playlist_tracks(user, id)
-            tracks = track_response["items"]
+            tracks, offset = [], 0
+            while True:
+                track_response = sp.user_playlist_tracks(user, id, offset=offset)
+                tracks += track_response["items"]
+                offset = len(tracks)
+                if len(track_response["items"]) < 100:
+                    break
 
+            
             # Return all track information for playlist
             for track in tracks:
                 track_info = {}
                 _track = track["track"]
                 track_info["album"] = _track["album"]["name"]
                 track_info["albumId"] = _track["album"]["id"]
-                track_info["albumUrl"] = _track["album"]["external_urls"]["spotify"]
+                track_info["albumUrl"] = _track["album"]["external_urls"].get("spotify", None)
                 track_info["artists"] = self._get_artists(_track["artists"])
-                track_info["url"] = _track["external_urls"]["spotify"]
+                track_info["url"] = _track["external_urls"].get("spotify", None)
                 track_info["name"] = _track["name"]
                 track_info["id"] = _track["id"]
                 track_info["duration"] = convert_ms_to_min_sec(_track["duration_ms"])
                 data.append(track_info)
 
         except Exception as e:
-            print(e)
+            log_error(e)
             return_status = HTTPStatus.NOT_FOUND
         
         return data, return_status, {'Access-Control-Allow-Headers': "Origin, X-Requested-With, Content-Type, Accept, x-auth"}
@@ -191,7 +203,7 @@ class SpotifyPlaylistInfoResource(Resource):
             sp = spotipy.Spotify(auth=access_token)
             data = self._convert_params(sp.user_playlist(user, id))
         except Exception as e:
-            print(e)
+            log_error(e)
             return_status = HTTPStatus.NOT_FOUND
         
         return data, return_status, {'Access-Control-Allow-Headers': "Origin, X-Requested-With, Content-Type, Accept, x-auth"}
@@ -220,12 +232,20 @@ class SpotifyTrackAudioFeaturesResource(Resource):
         try:
             access_token = session['spotify_token']
             sp = spotipy.Spotify(auth=access_token)
-            audio_features = sp.audio_features(track_ids)
+            audio_features = []
+            while track_ids:
+                length = 50 if len(track_ids) > 50 else len(track_ids)
+                audio_features += sp.audio_features(track_ids[:length])
+                track_ids = track_ids[length:]
+            
+            # Remove any none types
+            audio_features = [audio_feature for audio_feature in audio_features if audio_feature is not None]
+            
             for audio_feature in audio_features:
                 data.append(self._convert_params(audio_feature))
 
         except Exception as e:
-            print(e)
+            log_error(e)
             return_status = HTTPStatus.NOT_FOUND
         
         return data, return_status, {'Access-Control-Allow-Headers': "Origin, X-Requested-With, Content-Type, Accept, x-auth"}
@@ -251,7 +271,7 @@ class SpotifyTrackAudioAnalysisResource(Resource):
             }
 
         except Exception as e:
-            print(e)
+            log_error(e)
             return_status = HTTPStatus.NOT_FOUND
         
         return data, return_status, {'Access-Control-Allow-Headers': "Origin, X-Requested-With, Content-Type, Accept, x-auth"}

@@ -90,8 +90,10 @@ export class OutlierModalComponent implements OnInit, ModalComponent {
   }
 
   public showFullDetails(trackId: string): void {
+    // Reset data
+    this.trackFeatureComparissonData = [];
+    
     // Build chart data
-    // let trackFeatureComparissonData: GroupedBarChartData[] = [];
     const currentTrackFeatures = this.trackFeatures.find(track => track.id === trackId);
     const featureNames = ['danceability', 'energy', 'speechiness', 'acousticness', 'instrumentalness', 'liveness', 'valence', 'tempo'];
     featureNames.forEach(feature => {

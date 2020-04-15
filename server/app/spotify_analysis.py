@@ -48,7 +48,7 @@ class SpotifyAnalysis:
             temp = self.df.copy()
             
             # Drop non-numerical columns
-            temp = temp.drop(columns=['id'])
+            temp.drop(columns=['id', 'key', 'mode', 'time_signature'], inplace=True)
 
             # Convert MM:SS to seconds
             temp["duration"] = temp["duration"].apply(get_sec)
