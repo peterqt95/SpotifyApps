@@ -12,10 +12,24 @@
     justify-content: center;
     align-items: center;
     flex-wrap: wrap;
+    height: calc(100vh - 64px);
 }
 
 .flex-item {
     max-width: 400px;
     flex: 1 0 21%;
     margin: 8px;
+}
+
+.sidenav {
+    width: 250px;
+}
+
+.playlist {
+    border-bottom: 1px solid lightgrey;
+}
+
+.playlist:hover {
+    cursor: pointer;
+    background-color: grey;
 }

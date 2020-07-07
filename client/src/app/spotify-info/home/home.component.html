@@ -1,0 +1,15 @@
+<mat-drawer-container>
+  <mat-drawer #sidenav mode="side" opened class="sidenav">
+    <app-loader *ngIf="!loadStatus.isLoaded" class="container"></app-loader>
+    <mat-list *ngIf="loadStatus.isLoaded && !loadStatus.isError">
+      <mat-list-item role="listitem" *ngFor="let spotifyPlaylist of spotifyPlaylists" class="playlist">
+        <span [routerLink]="['/user/' + spotifyPlaylist.owner + '/playlist/' + spotifyPlaylist.id]">
+          {{spotifyPlaylist.name}}
+        </span>
+      </mat-list-item>
+    </mat-list>
+  </mat-drawer>
+  <div class="playlist-container">
+    <button mat-flat-button color="primary" (click)="sidenav.toggle()">Toggle</button>
+  </div>
+</mat-drawer-container>

@@ -1,7 +1,7 @@
 import json
 from app import api, jwt, db, sp_oauth
 from .models import User, UserSchema
-from flask import request, session, current_app, jsonify
+from flask import request, session, current_app, jsonify, send_file
 from flask_restful import Resource, Api
 from http import HTTPStatus
 from flask_jwt_extended import (
@@ -48,12 +48,12 @@ class UsersResource(Resource):
     def __init__(self):
         self.users_schema = UserSchema(many=True)
 
-    @jwt_required
+    # @jwt_required
     def get(self):
         users = User.query.all()
         return self.users_schema.dump(users)
     
-    @jwt_required
+    # @jwt_required
     def post(self):
         return_status = HTTPStatus.CREATED
         data = request.get_json(force = True)
@@ -70,7 +70,7 @@ class UserResource(Resource):
     def __init__(self):
         self.user_schema = UserSchema()
 
-    @jwt_required
+    # @jwt_required
     def get(self, id):
         return_status = HTTPStatus.OK
         try:
@@ -81,7 +81,7 @@ class UserResource(Resource):
         
         return self.user_schema.dump(user)
 
-    @jwt_required
+    # @jwt_required
     def put(self, id):
         return_status = HTTPStatus.CREATED
         data = request.get_json(force = True)
@@ -150,11 +150,16 @@ class RefreshTokenResource(Resource):
 
         return status.to_json(), return_status, {'Access-Control-Allow-Headers': "Origin, X-Requested-With, Content-Type, Accept, x-auth"}
 
+class TestResource(Resource):
+    def get(self):
+        return send_file("images/test.png", mimetype="image/png")
+
 api.add_resource(DefaultResource, '/')
 api.add_resource(UsersResource, '/users')
 api.add_resource(UserResource, '/users/<int:id>')
 api.add_resource(LoginRequired, '/login')
 api.add_resource(RefreshTokenResource, '/refresh')
+api.add_resource(TestResource, '/test')
 
 # Add other routes?
 from app import spotify_routes

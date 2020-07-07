@@ -50,7 +50,6 @@ export class HomeComponent implements OnInit{
     return {
       next: (results: SpotifyPlaylistInfo[]) => {
         this.spotifyPlaylists = results;
-        console.log(results);
       },
       error: (err) => {
         console.log(err);

@@ -15,3 +15,5 @@ lib64/
 parts/
 sdist/
 var/
+test.py
+test.html

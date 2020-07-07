@@ -9,12 +9,33 @@ user = "system"
 password = "kittyboy1"
 sid = cx_Oracle.makedsn(host, port, SID)
 
+# 'postgres',
+#     'pw': 'kittyboy1',
+#     'db': 'spotify-flask',
+#     'host': 'localhost',
+#     'port': '5432',
+
+POSTGRES_USER = "postgres"
+POSTGRES_PW = "kittyboy1"
+POSTGRES_DB = "spotify-flask"
+POSTGRES_HOST = "localhost"
+POSTGRES_PORT = "5432"
+
 class Config(object):
-    SQLALCHEMY_DATABASE_URI = "oracle://{user}:{password}@{sid}".format(
-        user = user,
-        password = password,
-        sid = sid
+    # SQLALCHEMY_DATABASE_URI = "oracle://{user}:{password}@{sid}".format(
+    #     user = user,
+    #     password = password,
+    #     sid = sid
+    # )
+
+    SQLALCHEMY_DATABASE_URI = "postgresql://{user}:{password}@{host}:{port}/{db}".format(
+        user = POSTGRES_USER,
+        password = POSTGRES_PW,
+        host = POSTGRES_HOST,
+        port = POSTGRES_PORT,
+        db = POSTGRES_DB
     )
+
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     SECRET_KEY = "super secret key"
     JWT_SECRET_KEY = SECRET_KEY
