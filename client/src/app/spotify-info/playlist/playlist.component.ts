@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { SpotifyService } from '@app/services/spotify.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { Subscriber, Subscription, PartialObserver, forkJoin } from 'rxjs';
 import { LoadStatus } from '@app/shared/Classes/LoadStatus';
 import { LoginService } from '@app/services/login.service';
@@ -22,6 +22,7 @@ export class PlaylistComponent implements OnInit, OnDestroy {
 
   // Get route id
   idSub: Subscription;
+  navSub: Subscription;
 
   // Playlist id
   playlistId: string = null;
@@ -47,6 +48,7 @@ export class PlaylistComponent implements OnInit, OnDestroy {
   constructor(
     private spotifyService: SpotifyService,
     private route: ActivatedRoute,
+    private router: Router,
     private dialog: MatDialog,
   ) {
     // Get route
@@ -54,14 +56,31 @@ export class PlaylistComponent implements OnInit, OnDestroy {
       this.playlistId = params['id'];
       this.userId = params['user'];
     });
+
+    // Check for reload
+    this.navSub = this.router.events.subscribe((e: any) => {
+      if (e instanceof NavigationEnd) {
+        this.initPlaylistInfo();
+      }
+    });
   }
 
   ngOnInit() {
-    this.getPlaylistInformation(this.playlistId);
+    this.initPlaylistInfo();
   }
 
   ngOnDestroy() {
     this.idSub.unsubscribe();
+
+    if (this.navSub) {
+      this.navSub.unsubscribe();
+    }
+  }
+
+  private initPlaylistInfo(): void {
+    // Fetch playlsit information
+    this.loadStatus.isLoaded = false;
+    this.getPlaylistInformation(this.playlistId);
   }
 
   private getPlaylistInformation(playlistId: string): void {

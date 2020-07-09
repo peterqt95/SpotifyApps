@@ -43,4 +43,4 @@ class Config(object):
     # JWT_ACCESS_TOKEN_EXPIRES = datetime.timedelta(minutes=1)
     SPOTIFY_CLIENT_ID = "3035f03a789149968ccf80e5f0a824f4"
     SPOTIFY_CLIENT_SECRET = "3f200238bff34b9db8baa3b69bbb2f09"
-    SPOTIFY_REDIRECT_URI = "http://localhost:4200/home"
+    SPOTIFY_REDIRECT_URI = "http://localhost:4200/spotify"

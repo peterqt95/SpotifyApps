@@ -39,7 +39,8 @@ export class LoginPageComponent implements OnInit {
   ngOnInit() {
     // Route away if logged in
     if (this.loginService.currentUserValue) {
-      this.router.navigate(['/home']);
+      console.log('here');
+      this.router.navigate(['/spotify']);
     } else {
       this.loginFg = this._formBuilder.group({
         userName: ['', Validators.required],
