@@ -48,12 +48,12 @@ class UsersResource(Resource):
     def __init__(self):
         self.users_schema = UserSchema(many=True)
 
-    # @jwt_required
+    @jwt_required
     def get(self):
         users = User.query.all()
         return self.users_schema.dump(users)
     
-    # @jwt_required
+    @jwt_required
     def post(self):
         return_status = HTTPStatus.CREATED
         data = request.get_json(force = True)
@@ -70,7 +70,7 @@ class UserResource(Resource):
     def __init__(self):
         self.user_schema = UserSchema()
 
-    # @jwt_required
+    @jwt_required
     def get(self, id):
         return_status = HTTPStatus.OK
         try:
@@ -81,7 +81,7 @@ class UserResource(Resource):
         
         return self.user_schema.dump(user)
 
-    # @jwt_required
+    @jwt_required
     def put(self, id):
         return_status = HTTPStatus.CREATED
         data = request.get_json(force = True)

@@ -1,6 +1,6 @@
 import json
 import sys, os
-from app import api, jwt, db, sp_oauth
+from app import api, jwt, db, sp_oauth, app
 from flask import request, session, current_app, jsonify
 from flask_restful import Resource, Api
 from http import HTTPStatus
@@ -8,6 +8,7 @@ from flask_jwt_extended import (
     jwt_required, create_access_token, get_jwt_identity, create_refresh_token,
     jwt_refresh_token_required
 )
+from functools import wraps
 import spotipy
 import spotipy.util as sp_util
 
@@ -29,7 +30,22 @@ def log_error(e):
     fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
     print(exc_type, fname, exc_tb.tb_lineno, e)
 
+# ToDo - If I want some random wrapper function on all my resources ¯\_(ツ)_/¯
+def timing(func):
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        return func(*args, **kwargs)
+    return wrapper
+
+@app.after_request
+def add_header(response):
+    response.headers['Access-Control-Allow-Headers'] = "Origin, X-Requested-With, Content-Type, Accept, x-auth"
+    return response
+
 class SpotifyAuthResource(Resource):
+
+    # ToDo: Use method_decorators to add our response header
+    method_decorators = [timing]
 
     @jwt_required
     def get(self):
@@ -45,9 +61,12 @@ class SpotifyAuthResource(Resource):
             print(e)
             return_status = HTTPStatus.NOT_FOUND
         
-        return data, return_status, {'Access-Control-Allow-Headers': "Origin, X-Requested-With, Content-Type, Accept, x-auth"}
+        # return data, return_status, {'Access-Control-Allow-Headers': "Origin, X-Requested-With, Content-Type, Accept, x-auth"}
+        return data, return_status
 
 class SpotifyRedirectResource(Resource):
+
+    method_decorators = [timing]
 
     @jwt_required
     def get(self):
@@ -59,9 +78,12 @@ class SpotifyRedirectResource(Resource):
             print(e)
             return_status = HTTPStatus.NOT_FOUND
         
-        return data, return_status, {'Access-Control-Allow-Headers': "Origin, X-Requested-With, Content-Type, Accept, x-auth"}
+        # return data, return_status, {'Access-Control-Allow-Headers': "Origin, X-Requested-With, Content-Type, Accept, x-auth"}
+        return data, return_status
 
 class SpotifyUserResource(Resource):
+
+    method_decorators = [timing]
 
     def _convert_params(self, data):
         # Convert snake to camel
@@ -97,9 +119,12 @@ class SpotifyUserResource(Resource):
             print(e)
             return_status = HTTPStatus.NOT_FOUND
 
-        return data, return_status, {'Access-Control-Allow-Headers': "Origin, X-Requested-With, Content-Type, Accept, x-auth"}
+        # return data, return_status, {'Access-Control-Allow-Headers': "Origin, X-Requested-With, Content-Type, Accept, x-auth"}
+        return data, return_status
 
 class SpotifyPlaylistsResource(Resource):
+
+    method_decorators = [timing]
 
     @jwt_required
     def get(self):
@@ -129,9 +154,12 @@ class SpotifyPlaylistsResource(Resource):
             print(e)
             return_status = HTTPStatus.NOT_FOUND
         
-        return data, return_status, {'Access-Control-Allow-Headers': "Origin, X-Requested-With, Content-Type, Accept, x-auth"}
+        # return data, return_status, {'Access-Control-Allow-Headers': "Origin, X-Requested-With, Content-Type, Accept, x-auth"}
+        return data, return_status
 
 class SpotifyPlaylistTracksResource(Resource):
+
+    method_decorators = [timing]
 
     def _get_artists(self, artists):
         artists_info = []
@@ -179,9 +207,12 @@ class SpotifyPlaylistTracksResource(Resource):
             log_error(e)
             return_status = HTTPStatus.NOT_FOUND
         
-        return data, return_status, {'Access-Control-Allow-Headers': "Origin, X-Requested-With, Content-Type, Accept, x-auth"}
+        # return data, return_status, {'Access-Control-Allow-Headers': "Origin, X-Requested-With, Content-Type, Accept, x-auth"}
+        return data, return_status
 
 class SpotifyPlaylistInfoResource(Resource):
+
+    method_decorators = [timing]
 
     def _convert_params(self, data):
         temp = {}
@@ -206,9 +237,12 @@ class SpotifyPlaylistInfoResource(Resource):
             log_error(e)
             return_status = HTTPStatus.NOT_FOUND
         
-        return data, return_status, {'Access-Control-Allow-Headers': "Origin, X-Requested-With, Content-Type, Accept, x-auth"}
+        # return data, return_status, {'Access-Control-Allow-Headers': "Origin, X-Requested-With, Content-Type, Accept, x-auth"}
+        return data, return_status
 
 class SpotifyTrackAudioFeaturesResource(Resource):
+
+    method_decorators = [timing]
 
     def _convert_params(self, audio_feature):
         # Convert params
@@ -248,9 +282,12 @@ class SpotifyTrackAudioFeaturesResource(Resource):
             log_error(e)
             return_status = HTTPStatus.NOT_FOUND
         
-        return data, return_status, {'Access-Control-Allow-Headers': "Origin, X-Requested-With, Content-Type, Accept, x-auth"}
+        # return data, return_status, {'Access-Control-Allow-Headers': "Origin, X-Requested-With, Content-Type, Accept, x-auth"}
+        return data, return_status
 
 class SpotifyTrackAudioAnalysisResource(Resource):
+
+    method_decorators = [timing]
 
     @jwt_required
     def get(self):
@@ -274,7 +311,9 @@ class SpotifyTrackAudioAnalysisResource(Resource):
             log_error(e)
             return_status = HTTPStatus.NOT_FOUND
         
-        return data, return_status, {'Access-Control-Allow-Headers': "Origin, X-Requested-With, Content-Type, Accept, x-auth"}
+        # return data, return_status, {'Access-Control-Allow-Headers': "Origin, X-Requested-With, Content-Type, Accept, x-auth"}
+        return data, return_status
+
 
 
 def add_routes():
