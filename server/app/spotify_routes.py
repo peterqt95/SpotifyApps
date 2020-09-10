@@ -311,8 +311,6 @@ class SpotifyTrackAudioAnalysisResource(Resource):
         
         return data, return_status
 
-
-
 def add_routes():
     api.add_resource(SpotifyAuthResource, '/spotify_auth')
     api.add_resource(SpotifyRedirectResource, '/spotify_redirect')
