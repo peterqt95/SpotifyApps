@@ -118,7 +118,6 @@ export class SpotifyService {
   public getCode(): string {
     const name = 'spotifyCode=';
     const ca = document.cookie.split(';');
-    console.log(ca);
     for (let i = 0; i < ca.length; i++) {
       let c = ca[i];
       while (c.charAt(0) === ' ') {

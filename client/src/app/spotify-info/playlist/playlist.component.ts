@@ -122,5 +122,4 @@ export class PlaylistComponent implements OnInit, OnDestroy {
       data: new ModalItem(OutlierModalComponent, MODAL_TITLE, outlierData)
     });
   }
-
 }

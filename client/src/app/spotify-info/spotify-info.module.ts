@@ -6,12 +6,14 @@ import { SpotifyInfoRoutingModule } from '@app/spotify-info/spotify-info-routing
 import { HomeComponent } from './home/home.component';
 import { PlaylistComponent } from './playlist/playlist.component';
 import { OutlierModalComponent } from './playlist/outlier-modal/outlier-modal.component';
+import { OutlierComponent } from './playlist/outlier/outlier.component';
 
 @NgModule({
   declarations: [
     HomeComponent,
     PlaylistComponent,
     OutlierModalComponent,
+    OutlierComponent,
   ],
   imports: [
     SharedModule,
