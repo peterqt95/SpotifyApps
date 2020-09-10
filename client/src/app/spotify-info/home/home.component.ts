@@ -61,14 +61,25 @@ export class HomeComponent implements OnInit{
   }
 
   private getSpotifyUser(results: SpotifyAuthUrl): Observable<any> {
-      const spotifyCode = this.router.parseUrl(this.router.url).queryParamMap.get('code');
-      
-      // Validate code
-      if (spotifyCode == null) {
-        window.location.href = results.authUrl;
-      }
+    // Grab cookie from storage
+    const spotifyCode = this.spotifyService.getCode();
 
-      return this.spotifyService.getSpotifyUser(spotifyCode);
+    // Check url
+    if (spotifyCode == null) {
+      const spotifyCodeFromUrl = this.router.parseUrl(this.router.url).queryParamMap.get('code');
+      console.log(spotifyCodeFromUrl);
+
+      // Validate code
+      if (spotifyCodeFromUrl == null) {
+        console.log(spotifyCodeFromUrl);
+        window.location.href = results.authUrl;
+      } else {
+        this.spotifyService.setCode(spotifyCodeFromUrl);
+        window.location.href = this.router.url.split('?')[0];
+      }
+    }
+
+    return this.spotifyService.getSpotifyUser(spotifyCode);
   }
 
   private getSpotifyUserSub(): PartialObserver<any> {

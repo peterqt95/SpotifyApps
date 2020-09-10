@@ -1,5 +1,5 @@
 import json
-from app import api, jwt, db, sp_oauth
+from app import api, jwt, db, sp_oauth, app
 from .models import User, UserSchema
 from flask import request, session, current_app, jsonify, send_file
 from flask_restful import Resource, Api
@@ -10,6 +10,11 @@ from flask_jwt_extended import (
 )
 import spotipy
 import spotipy.util as sp_util
+
+# @app.after_request
+# def add_header(response):
+#     response.headers['Access-Control-Allow-Headers'] = "Origin, X-Requested-With, Content-Type, Accept, x-auth"
+#     return response
 
 class Error():
     def __init__(self):
@@ -148,7 +153,7 @@ class RefreshTokenResource(Resource):
         else:
             status.error = "Invalid refresh token"
 
-        return status.to_json(), return_status, {'Access-Control-Allow-Headers': "Origin, X-Requested-With, Content-Type, Accept, x-auth"}
+        return status.to_json(), return_status
 
 class TestResource(Resource):
     def get(self):

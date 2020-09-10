@@ -61,7 +61,6 @@ class SpotifyAuthResource(Resource):
             print(e)
             return_status = HTTPStatus.NOT_FOUND
         
-        # return data, return_status, {'Access-Control-Allow-Headers': "Origin, X-Requested-With, Content-Type, Accept, x-auth"}
         return data, return_status
 
 class SpotifyRedirectResource(Resource):
@@ -119,7 +118,6 @@ class SpotifyUserResource(Resource):
             print(e)
             return_status = HTTPStatus.NOT_FOUND
 
-        # return data, return_status, {'Access-Control-Allow-Headers': "Origin, X-Requested-With, Content-Type, Accept, x-auth"}
         return data, return_status
 
 class SpotifyPlaylistsResource(Resource):
@@ -311,7 +309,6 @@ class SpotifyTrackAudioAnalysisResource(Resource):
             log_error(e)
             return_status = HTTPStatus.NOT_FOUND
         
-        # return data, return_status, {'Access-Control-Allow-Headers': "Origin, X-Requested-With, Content-Type, Accept, x-auth"}
         return data, return_status
 
 
