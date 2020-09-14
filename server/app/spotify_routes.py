@@ -52,8 +52,8 @@ class SpotifyAuthResource(Resource):
         return_status = HTTPStatus.OK
         data = {}
 
-        if 'spotify_token' in session:
-            del session['spotify_token']
+        # if 'spotify_token' in session:
+            # del session['spotify_token']
 
         try:
             data['authUrl'] = sp_oauth.get_authorize_url()
@@ -77,7 +77,6 @@ class SpotifyRedirectResource(Resource):
             print(e)
             return_status = HTTPStatus.NOT_FOUND
         
-        # return data, return_status, {'Access-Control-Allow-Headers': "Origin, X-Requested-With, Content-Type, Accept, x-auth"}
         return data, return_status
 
 class SpotifyUserResource(Resource):
@@ -91,22 +90,16 @@ class SpotifyUserResource(Resource):
         del data['display_name']
         return data
 
-    @jwt_required
+    # @jwt_required
     def get(self, code):
         return_status = HTTPStatus.OK
         data = jsonify()
-        access_token = None
 
-        # Check to see if spotify session already active
-        if 'spotify_token' in session:
-            access_token = session['spotify_token']
-
-        # Fetch the token if there is none
-        if access_token is None:
-            token_info = sp_oauth.get_cached_token()
-            if token_info is None:
-                token_info = sp_oauth.get_access_token(code)
-            access_token = token_info['access_token']
+        # Fetch token
+        token_info = sp_oauth.get_cached_token()
+        if token_info is None:
+            token_info = sp_oauth.get_access_token(code)
+        access_token = token_info['access_token']
         
         try:
             # Fetch the user and store the spotify token

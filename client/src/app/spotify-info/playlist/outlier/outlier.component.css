@@ -1,0 +1,29 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 16px;
+}
+
+.tracks-container {
+    width: 75%;
+    padding: 16px;
+}
+
+.tracks-header {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+.tracks {
+    max-height: 500px;
+    min-height: 500px;
+    overflow: auto;
+}
+
+.text-left {
+    text-align: left;
+}

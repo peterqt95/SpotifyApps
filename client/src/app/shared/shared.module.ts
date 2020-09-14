@@ -7,9 +7,10 @@ import { ModalDirective } from './Directives/modal.directive';
 import { LoaderComponent } from './Components/loader/loader.component';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { GroupedBarChartComponent } from './Components/ngx-charts/grouped-bar-chart/grouped-bar-chart.component';
+import { MatTableDisplayComponent } from './Components/mat-table-display/mat-table-display.component';
 
 @NgModule({
-  declarations: [ModalComponentFactoryComponent, ModalDirective, LoaderComponent, GroupedBarChartComponent],
+  declarations: [ModalComponentFactoryComponent, ModalDirective, LoaderComponent, GroupedBarChartComponent, MatTableDisplayComponent],
   imports: [
     CommonModule,
     MaterialModule,

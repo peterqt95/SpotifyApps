@@ -29,7 +29,6 @@ export class GroupedBarChartComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
-    console.log(this.results);
   }
 
 }

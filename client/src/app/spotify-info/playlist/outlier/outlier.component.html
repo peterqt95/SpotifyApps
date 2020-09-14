@@ -1,3 +1,13 @@
-<p>
-  outlier works!
-</p>
+<div class="container">
+  <div class="header">
+    <h1 *ngIf="loadStatus.get('main').isLoaded && !loadStatus.get('main').isError">{{spotifyPlaylistInfo.name}}</h1>
+  </div>
+  <div class="content" *ngIf="loadStatus.get('outliers').isLoaded && !loadStatus.get('outliers').isError">
+    <app-remove-data [outliers]="outliers"
+      [trackFeatures]="trackFeatures"
+      [featureDescriptions]="audioAnalysis.featureDescriptions"
+      [playlistLoaded]="loadStatus.get('outliers').isLoaded"
+      [detailsLoaded]="loadStatus.get('outlierDetails').isLoaded"></app-remove-data>
+  </div>
+  <app-loader *ngIf="!loadStatus.get('main').isLoaded"></app-loader>
+</div>
