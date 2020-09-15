@@ -11,7 +11,10 @@
     </mat-list>
   </mat-drawer>
   <div class="playlist-container">
-    <button mat-flat-button color="primary" (click)="sidenav.toggle()" id="toggle">Toggle</button>
+    <button mat-icon-button color="primary" (click)="sidenav.toggle()" id="toggle">
+      <mat-icon *ngIf="sidenav.opened">keyboard_arrow_left</mat-icon>
+      <mat-icon *ngIf="!sidenav.opened">keyboard_arrow_right</mat-icon>
+    </button>
     <div class="child-container">
       <router-outlet></router-outlet>
     </div>
