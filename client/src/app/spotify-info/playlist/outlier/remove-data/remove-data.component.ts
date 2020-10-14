@@ -24,7 +24,7 @@ export class RemoveDataComponent extends MatTableDisplayComponent implements OnI
 
   ngOnInit() {
     this.data = this.outliers;
-    this.displayedColumns = ['name', 'artists', 'album', 'duration', 'analysis'];
+    this.displayedColumns = ['checked', 'name', 'artists', 'album', 'duration', 'analysis'];
     super.ngOnInit();
   }
 

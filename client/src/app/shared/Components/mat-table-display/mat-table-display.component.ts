@@ -27,4 +27,12 @@ export class MatTableDisplayComponent implements OnInit {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
+  public addRemoveModal(remove: boolean) {
+    if (remove) {
+      console.log('removing');
+    } else {
+      console.log('adding');
+    }
+  }
+
 }

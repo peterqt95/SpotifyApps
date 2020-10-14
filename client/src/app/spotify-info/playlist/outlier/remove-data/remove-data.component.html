@@ -1,5 +1,5 @@
-<div>
-  <div class="tracks-container" [hidden]="!playlistLoaded">
+<div class="content-container">
+  <div class="" [hidden]="!playlistLoaded">
     <div class="tracks-header">
       <mat-form-field>
         <mat-label>Filter</mat-label>
@@ -8,7 +8,15 @@
       <div class="flex-grow"></div>
       <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" [pageSize]="25"></mat-paginator>
     </div>
-    <mat-table [dataSource]="dataSource" class="tracks">
+    <mat-table [dataSource]="dataSource" class="">
+
+      <ng-container matColumnDef="checked">
+        <mat-header-cell *matHeaderCellDef>Check</mat-header-cell>
+        <mat-cell *matCellDef="let element"> 
+          <mat-checkbox [(ngModel)]="element.checked"></mat-checkbox>
+        </mat-cell>
+      </ng-container>
+
       <ng-container matColumnDef="name">
         <mat-header-cell *matHeaderCellDef> Name </mat-header-cell>
         <mat-cell *matCellDef="let row"> {{row.name}} </mat-cell>
@@ -39,14 +47,24 @@
           <button mat-flat-button color="primary" (click)="showFullDetails(row.id)">Details</button>
         </mat-cell>
       </ng-container>
+
+      <ng-container matColumnDef="actions">
+        <mat-footer-cell *matFooterCellDef colspan="42" class="content-center">
+          <button
+            mat-flat-button
+            color="warn"
+            (click)="addRemoveModal(true)">Remove</button>
+        </mat-footer-cell>
+      </ng-container>
     
       <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
       <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+      <mat-footer-row *matFooterRowDef="['actions']" class="footer-actions"></mat-footer-row>
     </mat-table>
   </div>
   
   
-  <div *ngIf="detailsLoaded" class="text-left">
+  <div *ngIf="detailsLoaded" class="">
     <button
       mat-icon-button
       matSuffix
@@ -55,6 +73,8 @@
       (click)="toggle()">
       <mat-icon>keyboard_arrow_left</mat-icon> Back
     </button>
-    <app-grouped-bar-chart [results]="trackFeatureComparissonData"></app-grouped-bar-chart>
+    <div>
+      <app-grouped-bar-chart [results]="trackFeatureComparissonData"></app-grouped-bar-chart>
+    </div>
   </div>
 </div>
