@@ -5,6 +5,7 @@ import { SpotifyTrackFeatures } from '@app/models/SpotifyTrackFeatures';
 import { DescriptiveStats } from '@app/models/SpotifyAudioAnalysis';
 import { GroupedBarChartData } from '@app/shared/Classes/ngx-charts/GroupedBarChartData';
 import { ChartDataPoint } from '@app/shared/Classes/ngx-charts/ChartDataPoint';
+import { SelectionModel } from '@angular/cdk/collections';
 
 @Component({
   selector: 'app-remove-data',
@@ -21,6 +22,9 @@ export class RemoveDataComponent extends MatTableDisplayComponent implements OnI
 
   // Track comparisson details
   trackFeatureComparissonData: GroupedBarChartData[] = [];
+
+  // Selected tracks to remove
+  selectedForRemoval: SelectionModel<SpotifyTrack> = new SelectionModel<SpotifyTrack>(true, []);
 
   ngOnInit() {
     this.data = this.outliers;
@@ -62,6 +66,18 @@ export class RemoveDataComponent extends MatTableDisplayComponent implements OnI
   public toggle(): void {
     this.playlistLoaded = !this.playlistLoaded;
     this.detailsLoaded = !this.detailsLoaded;
+  }
+
+  public isAllSelected(): boolean {
+    const numSelected = this.selectedForRemoval.selected.length;
+    const numRows = this.dataSource.data.length;
+    return numSelected === numRows;
+  }
+
+  public toggleAll(): void {
+    this.isAllSelected()
+    ? this.selectedForRemoval.clear()
+    : this.dataSource.data.forEach(row => this.selectedForRemoval.select(row));
   }
 
 }

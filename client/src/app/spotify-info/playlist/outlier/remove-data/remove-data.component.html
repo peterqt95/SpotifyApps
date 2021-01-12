@@ -11,9 +11,16 @@
     <mat-table [dataSource]="dataSource" class="">
 
       <ng-container matColumnDef="checked">
-        <mat-header-cell *matHeaderCellDef>Check</mat-header-cell>
-        <mat-cell *matCellDef="let element"> 
-          <mat-checkbox [(ngModel)]="element.checked"></mat-checkbox>
+        <mat-header-cell *matHeaderCellDef>
+          <mat-checkbox (change)="$event ? toggleAll() : null"
+                    [checked]="selectedForRemoval.hasValue() && isAllSelected()"
+                    [indeterminate]="selectedForRemoval.hasValue() && !isAllSelected()">
+          </mat-checkbox>
+        </mat-header-cell>
+        <mat-cell *matCellDef="let row"> 
+          <mat-checkbox (click)="$event.stopPropagation()"
+            (change)="$event ? selectedForRemoval.toggle(row) : null"
+            [checked]="selectedForRemoval.isSelected(row)"></mat-checkbox>
         </mat-cell>
       </ng-container>
 
@@ -53,7 +60,7 @@
           <button
             mat-flat-button
             color="warn"
-            (click)="addRemoveModal(true)">Remove</button>
+            (click)="addRemoveModal(true, selectedForRemoval)">Remove</button>
         </mat-footer-cell>
       </ng-container>
     

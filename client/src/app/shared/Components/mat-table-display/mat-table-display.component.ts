@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material';
+import { SelectionModel } from '@angular/cdk/collections';
 
 @Component({
   selector: 'app-mat-table-display',
@@ -27,9 +28,10 @@ export class MatTableDisplayComponent implements OnInit {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
-  public addRemoveModal(remove: boolean) {
+  public addRemoveModal(remove: boolean, selected: SelectionModel<any>) {
     if (remove) {
       console.log('removing');
+      console.log(selected.selected);
     } else {
       console.log('adding');
     }
