@@ -1,75 +1,81 @@
 <div class="content-container">
   <div class="" [hidden]="!playlistLoaded">
-    <div class="tracks-header">
-      <mat-form-field>
-        <mat-label>Filter</mat-label>
-        <input matInput (keyup)="applyFilter($event)">
-      </mat-form-field>
-      <div class="flex-grow"></div>
-      <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" [pageSize]="25"></mat-paginator>
-    </div>
-    <mat-table [dataSource]="dataSource" class="">
-
-      <ng-container matColumnDef="checked">
-        <mat-header-cell *matHeaderCellDef>
-          <mat-checkbox (change)="$event ? toggleAll() : null"
-                    [checked]="selectedForRemoval.hasValue() && isAllSelected()"
-                    [indeterminate]="selectedForRemoval.hasValue() && !isAllSelected()">
-          </mat-checkbox>
-        </mat-header-cell>
-        <mat-cell *matCellDef="let row"> 
-          <mat-checkbox (click)="$event.stopPropagation()"
-            (change)="$event ? selectedForRemoval.toggle(row) : null"
-            [checked]="selectedForRemoval.isSelected(row)"></mat-checkbox>
-        </mat-cell>
-      </ng-container>
-
-      <ng-container matColumnDef="name">
-        <mat-header-cell *matHeaderCellDef> Name </mat-header-cell>
-        <mat-cell *matCellDef="let row"> {{row.name}} </mat-cell>
-      </ng-container>
-    
-      <ng-container matColumnDef="artists">
-        <mat-header-cell *matHeaderCellDef> Artists </mat-header-cell>
-        <mat-cell *matCellDef="let row"> {{row.artists[0].name}} </mat-cell>
-      </ng-container>
-    
-      <ng-container matColumnDef="album">
-        <mat-header-cell *matHeaderCellDef> Album </mat-header-cell>
-        <mat-cell *matCellDef="let row">
-          <a mat-icon-button>
-            {{row.album}}
-          </a>
-        </mat-cell>
-      </ng-container>
-    
-      <ng-container matColumnDef="duration">
-        <mat-header-cell *matHeaderCellDef> Time </mat-header-cell>
-        <mat-cell *matCellDef="let row"> {{row.duration}} </mat-cell>
-      </ng-container>
+    <ng-container *ngIf="dataSource.data.length > 0">
+      <div class="tracks-header">
+        <mat-form-field>
+          <mat-label>Filter</mat-label>
+          <input matInput (keyup)="applyFilter($event)">
+        </mat-form-field>
+        <div class="flex-grow"></div>
+        <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" [pageSize]="25"></mat-paginator>
+      </div>
+      <mat-table [dataSource]="dataSource" class="">
   
-      <ng-container matColumnDef="analysis">
-        <mat-header-cell *matHeaderCellDef> Analysis </mat-header-cell>
-        <mat-cell *matCellDef="let row">
-          <button mat-flat-button color="primary" (click)="showFullDetails(row.id)">Details</button>
-        </mat-cell>
-      </ng-container>
-
-      <ng-container matColumnDef="actions">
-        <mat-footer-cell *matFooterCellDef colspan="42" class="content-center">
-          <button
-            mat-flat-button
-            color="warn"
-            (click)="addRemoveModal(true, selectedForRemoval)">Remove</button>
-        </mat-footer-cell>
-      </ng-container>
+        <ng-container matColumnDef="checked">
+          <mat-header-cell *matHeaderCellDef>
+            <mat-checkbox (change)="$event ? toggleAll() : null"
+                      [checked]="selectedForRemoval.hasValue() && isAllSelected()"
+                      [indeterminate]="selectedForRemoval.hasValue() && !isAllSelected()">
+            </mat-checkbox>
+          </mat-header-cell>
+          <mat-cell *matCellDef="let row"> 
+            <mat-checkbox (click)="$event.stopPropagation()"
+              (change)="$event ? selectedForRemoval.toggle(row) : null"
+              [checked]="selectedForRemoval.isSelected(row)"></mat-checkbox>
+          </mat-cell>
+        </ng-container>
+  
+        <ng-container matColumnDef="name">
+          <mat-header-cell *matHeaderCellDef> Name </mat-header-cell>
+          <mat-cell *matCellDef="let row"> {{row.name}} </mat-cell>
+        </ng-container>
+      
+        <ng-container matColumnDef="artists">
+          <mat-header-cell *matHeaderCellDef> Artists </mat-header-cell>
+          <mat-cell *matCellDef="let row"> {{row.artists[0].name}} </mat-cell>
+        </ng-container>
+      
+        <ng-container matColumnDef="album">
+          <mat-header-cell *matHeaderCellDef> Album </mat-header-cell>
+          <mat-cell *matCellDef="let row">
+            <a mat-icon-button>
+              {{row.album}}
+            </a>
+          </mat-cell>
+        </ng-container>
+      
+        <ng-container matColumnDef="duration">
+          <mat-header-cell *matHeaderCellDef> Time </mat-header-cell>
+          <mat-cell *matCellDef="let row"> {{row.duration}} </mat-cell>
+        </ng-container>
     
-      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-      <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
-      <mat-footer-row *matFooterRowDef="['actions']" class="footer-actions"></mat-footer-row>
-    </mat-table>
+        <ng-container matColumnDef="analysis">
+          <mat-header-cell *matHeaderCellDef> Analysis </mat-header-cell>
+          <mat-cell *matCellDef="let row">
+            <button mat-flat-button color="primary" class="center" (click)="showFullDetails(row.id)">Details</button>
+          </mat-cell>
+        </ng-container>
+  
+        <ng-container matColumnDef="actions">
+          <mat-footer-cell *matFooterCellDef colspan="42" class="content-center">
+            <button
+              mat-flat-button
+              color="warn"
+              (click)="addRemoveModal(true, selectedForRemoval)">Remove</button>
+          </mat-footer-cell>
+        </ng-container>
+      
+        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+        <mat-footer-row *matFooterRowDef="['actions']" class="footer-actions"></mat-footer-row>
+      </mat-table>
+    </ng-container>
+    <ng-container *ngIf="dataSource.data.length === 0">
+      <div class="">
+        <p>No more data to display</p>
+      </div>
+    </ng-container>
   </div>
-  
   
   <div *ngIf="detailsLoaded" class="">
     <button

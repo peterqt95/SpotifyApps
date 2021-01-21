@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material';
 import { SelectionModel } from '@angular/cdk/collections';
+import { SpotifyTrack } from '@app/models/SpotifyTrack';
 
 @Component({
   selector: 'app-mat-table-display',
@@ -28,10 +29,14 @@ export class MatTableDisplayComponent implements OnInit {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
-  public addRemoveModal(remove: boolean, selected: SelectionModel<any>) {
+  public addRemoveModal(remove: boolean, selected: SelectionModel<SpotifyTrack>) {
     if (remove) {
-      console.log('removing');
-      console.log(selected.selected);
+      selected.selected.forEach( (spotifyTrack: SpotifyTrack) => {
+        const trackId = spotifyTrack.id;
+        const index = this.dataSource.data.findIndex((sourceSpotifyTrack: SpotifyTrack) => sourceSpotifyTrack.id === trackId);
+        this.dataSource.data.splice(index, 1);
+        this.dataSource.data = [...this.dataSource.data];
+      });
     } else {
       console.log('adding');
     }

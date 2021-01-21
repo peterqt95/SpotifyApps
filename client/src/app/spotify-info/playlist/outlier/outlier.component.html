@@ -3,17 +3,10 @@
     <h1 *ngIf="loadStatus.get('main').isLoaded && !loadStatus.get('main').isError">{{spotifyPlaylistInfo.name}}</h1>
   </div>
   <div class="content flex-vert" *ngIf="loadStatus.get('main').isLoaded">
-    <div class="flex-2 outlier-chart">
-      <!-- Insert chart app here -->
-    </div>
-    <div class="flex-2 flex-horiz">
+    <!-- <div class="flex-2 outlier-chart">
+    </div> -->
+    <!-- <div class="flex-2 flex-horiz">
       <div class="recommendation-content flex-2" *ngIf="loadStatus.get('outliers').isLoaded && !loadStatus.get('outliers').isError">
-        <!-- Filler -->
-        <app-remove-data [outliers]="outliers"
-          [trackFeatures]="trackFeatures"
-          [featureDescriptions]="audioAnalysis.featureDescriptions"
-          [playlistLoaded]="loadStatus.get('outliers').isLoaded"
-          [detailsLoaded]="loadStatus.get('outlierDetails').isLoaded"></app-remove-data>
       </div>
       <div class="outlier-content flex-2" *ngIf="loadStatus.get('outliers').isLoaded && !loadStatus.get('outliers').isError">
         <app-remove-data [outliers]="outliers"
@@ -23,7 +16,25 @@
           [detailsLoaded]="loadStatus.get('outlierDetails').isLoaded"></app-remove-data>
       </div>
       <app-loader class="outlier-content flex-2" *ngIf="!loadStatus.get('outliers').isLoaded"></app-loader>
+    </div> -->
+    <div class="grid">
+      <div class="outlier-content module" *ngIf="loadStatus.get('outliers').isLoaded && !loadStatus.get('outliers').isError">
+        <app-remove-data [outliers]="outliers"
+          [trackFeatures]="trackFeatures"
+          [featureDescriptions]="audioAnalysis.featureDescriptions"
+          [playlistLoaded]="loadStatus.get('outliers').isLoaded"
+          [detailsLoaded]="loadStatus.get('outlierDetails').isLoaded"></app-remove-data>
+      </div>
+      <div class="outlier-content module" *ngIf="loadStatus.get('outliers').isLoaded && !loadStatus.get('outliers').isError">
+        <app-remove-data [outliers]="outliers"
+          [trackFeatures]="trackFeatures"
+          [featureDescriptions]="audioAnalysis.featureDescriptions"
+          [playlistLoaded]="loadStatus.get('outliers').isLoaded"
+          [detailsLoaded]="loadStatus.get('outlierDetails').isLoaded"></app-remove-data>
+      </div>
+      <app-loader class="outlier-content module" *ngIf="!loadStatus.get('outliers').isLoaded"></app-loader>
     </div>
+
   </div>
 
   <app-loader *ngIf="!loadStatus.get('main').isLoaded"></app-loader>
