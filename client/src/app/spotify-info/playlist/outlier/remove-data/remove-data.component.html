@@ -2,15 +2,14 @@
   <div class="" [hidden]="!playlistLoaded">
     <ng-container *ngIf="dataSource.data.length > 0">
       <div class="tracks-header">
-        <mat-form-field>
+        <mat-form-field class="filter">
           <mat-label>Filter</mat-label>
           <input matInput (keyup)="applyFilter($event)">
         </mat-form-field>
         <div class="flex-grow"></div>
         <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" [pageSize]="25"></mat-paginator>
       </div>
-      <mat-table [dataSource]="dataSource" class="">
-  
+      <mat-table [dataSource]="dataSource" class="table-container">
         <ng-container matColumnDef="checked">
           <mat-header-cell *matHeaderCellDef>
             <mat-checkbox (change)="$event ? toggleAll() : null"
@@ -61,6 +60,7 @@
             <button
               mat-flat-button
               color="warn"
+              [disabled]="selectedForRemoval.selected.length === 0"
               (click)="addRemoveModal(true, selectedForRemoval)">Remove</button>
           </mat-footer-cell>
         </ng-container>

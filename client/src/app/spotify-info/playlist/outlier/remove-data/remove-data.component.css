@@ -5,3 +5,23 @@
 .content-center {
     justify-content: center;
 }
+
+.content-container {
+    min-height: 500px;
+    background: white;
+    border: 1px solid lightgrey;
+}
+
+.table-container {
+    min-height: 400px;
+    max-height: 500px;
+    overflow: auto;
+}
+
+.tracks-header .filter {
+    padding: 8px;
+}
+
+.mat-paginator {
+    border-bottom: 1px solid lightgrey;
+}
