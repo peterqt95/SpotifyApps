@@ -8,6 +8,7 @@ import { PlaylistComponent } from './playlist/playlist.component';
 import { OutlierModalComponent } from './playlist/outlier-modal/outlier-modal.component';
 import { OutlierComponent } from './playlist/outlier/outlier.component';
 import { RemoveDataComponent } from './playlist/outlier/remove-data/remove-data.component';
+import { OutlierMapComponent } from './playlist/outlier/outlier-map/outlier-map.component';
 
 @NgModule({
   declarations: [
@@ -16,6 +17,7 @@ import { RemoveDataComponent } from './playlist/outlier/remove-data/remove-data.
     OutlierModalComponent,
     OutlierComponent,
     RemoveDataComponent,
+    OutlierMapComponent,
   ],
   imports: [
     SharedModule,

@@ -1,5 +1,4 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { GroupedBarChartData } from '@app/shared/Classes/ngx-charts/GroupedBarChartData';
 
 @Component({

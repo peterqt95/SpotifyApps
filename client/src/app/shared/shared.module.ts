@@ -8,9 +8,10 @@ import { LoaderComponent } from './Components/loader/loader.component';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { GroupedBarChartComponent } from './Components/ngx-charts/grouped-bar-chart/grouped-bar-chart.component';
 import { MatTableDisplayComponent } from './Components/mat-table-display/mat-table-display.component';
+import { BubbleChartComponent } from './Components/ngx-charts/bubble-chart/bubble-chart.component';
 
 @NgModule({
-  declarations: [ModalComponentFactoryComponent, ModalDirective, LoaderComponent, GroupedBarChartComponent, MatTableDisplayComponent],
+  declarations: [ModalComponentFactoryComponent, ModalDirective, LoaderComponent, GroupedBarChartComponent, MatTableDisplayComponent, BubbleChartComponent],
   imports: [
     CommonModule,
     MaterialModule,
@@ -25,6 +26,7 @@ import { MatTableDisplayComponent } from './Components/mat-table-display/mat-tab
     ReactiveFormsModule,
     LoaderComponent,
     GroupedBarChartComponent,
+    BubbleChartComponent,
     NgxChartsModule,
   ],
   entryComponents: [
