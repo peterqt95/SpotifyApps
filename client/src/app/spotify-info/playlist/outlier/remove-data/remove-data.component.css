@@ -7,7 +7,7 @@
 }
 
 .content-container {
-    min-height: 500px;
+    min-height: 550px;
     background: white;
     border: 1px solid lightgrey;
 }
@@ -24,4 +24,11 @@
 
 .mat-paginator {
     border-bottom: 1px solid lightgrey;
+}
+
+.detail-header {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    width: 100%;
 }

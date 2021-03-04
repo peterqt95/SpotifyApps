@@ -77,17 +77,17 @@
     </ng-container>
   </div>
   
-  <div *ngIf="detailsLoaded" class="">
-    <button
-      mat-icon-button
-      matSuffix
-      color="primary"
-      type="button"
-      (click)="toggle()">
-      <mat-icon>keyboard_arrow_left</mat-icon> Back
-    </button>
-    <div>
-      <app-grouped-bar-chart [results]="trackFeatureComparissonData"></app-grouped-bar-chart>
+  <div *ngIf="detailsLoaded">
+    <div class="detail-header">
+      <button
+        mat-icon-button
+        matSuffix
+        color="primary"
+        type="button"
+        (click)="toggle()">
+        <mat-icon>keyboard_arrow_left</mat-icon> Back
+      </button>
     </div>
+    <app-grouped-bar-chart [results]="trackFeatureComparissonData"></app-grouped-bar-chart>
   </div>
 </div>
