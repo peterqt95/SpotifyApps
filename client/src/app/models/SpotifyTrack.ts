@@ -23,6 +23,7 @@ export class SpotifyTrack extends BaseModel {
     name: string = null;
     duration: number = null;
     id: string = null;
+    popularity: number = null;
 
     constructor(instanceData?: SpotifyTrack) {
         super(instanceData);

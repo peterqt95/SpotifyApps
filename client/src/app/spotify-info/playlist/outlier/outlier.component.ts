@@ -141,6 +141,8 @@ export class OutlierComponent implements OnInit, OnDestroy {
         // Map the outliers
         const tracks: SpotifyTrack[] = this.spotifyTracks;
         this.outliers = tracks.filter(track => this.audioAnalysis.outliers.includes(track.id));
+
+        console.log(this.audioAnalysis);
       },
       error: (err) => {},
       complete: () => { this.loadStatus.get('outliers').isLoaded = true; }

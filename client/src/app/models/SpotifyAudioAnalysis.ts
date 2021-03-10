@@ -26,6 +26,7 @@ export class SpotifyAudioAnalysis extends BaseModel {
 
     featureDescriptions: DescriptiveStats[] = [];
     outliers: string[] = [];
+    outlierCords: any[] = [];
 
     constructor(instanceData?: SpotifyAudioAnalysis) {
         super(instanceData);
