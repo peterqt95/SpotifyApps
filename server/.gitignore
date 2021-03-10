@@ -17,3 +17,6 @@ sdist/
 var/
 test.py
 test.html
+
+# Ignore sample code and csv
+test/

@@ -90,7 +90,7 @@ class SpotifyUserResource(Resource):
         del data['display_name']
         return data
 
-    # @jwt_required
+    @jwt_required
     def get(self, code):
         return_status = HTTPStatus.OK
         data = jsonify()
@@ -192,6 +192,7 @@ class SpotifyPlaylistTracksResource(Resource):
                 track_info["name"] = _track["name"]
                 track_info["id"] = _track["id"]
                 track_info["duration"] = convert_ms_to_min_sec(_track["duration_ms"])
+                track_info["popularity"] = _track["popularity"]
                 data.append(track_info)
 
         except Exception as e:
@@ -291,11 +292,12 @@ class SpotifyTrackAudioAnalysisResource(Resource):
             sp = spotipy.Spotify(auth=access_token)
             sp_analysis = spa.SpotifyAnalysis(tracks_audio_features)
             feature_descriptions = sp_analysis.find_average()
-            outliers = sp_analysis.find_outliers()
+            outliers, outlier_cords = sp_analysis.find_outliers()
 
             data = {
                 'featureDescriptions': feature_descriptions,
-                'outliers': outliers
+                'outliers': outliers,
+                'outlierCords': outlier_cords
             }
 
         except Exception as e:

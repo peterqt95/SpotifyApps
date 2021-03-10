@@ -41,7 +41,7 @@ class SpotifyAnalysis:
 
     def find_outliers(self):
 
-        results = []
+        results, result_cords = [], []
 
         try:
             # Make a copy
@@ -56,14 +56,16 @@ class SpotifyAnalysis:
             # Fit data
             min_max_scaler = preprocessing.StandardScaler()
             np_scaled = min_max_scaler.fit_transform(temp)
-            data = pd.DataFrame(np_scaled)
+            pca = PCA(n_components=2)
+            X = pd.DataFrame(np_scaled)
+            X_reduce = pca.fit_transform(X)
 
             # Predict
             model = IsolationForest(contamination="auto")
-            model.fit(data)
+            model.fit(X_reduce)
 
             # Check for anomalies
-            temp["anomaly"] = pd.Series(model.predict(data))
+            temp["anomaly"] = pd.Series(model.predict(X_reduce))
             temp["anomaly"] = temp["anomaly"].map({ 1: 0, -1: 1 })
             
             # Rebuild data and filter for anomlies only to return
@@ -75,8 +77,11 @@ class SpotifyAnalysis:
             # Just need to return the id of the tracks
             for track_idx, track in temp.items():
                 results.append(track["id"])
+            
+            # Return coordinates
+            result_cords = X_reduce.tolist()
 
         except Exception as e:
             print(e)
         
-        return results
+        return results, result_cords
