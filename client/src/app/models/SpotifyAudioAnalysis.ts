@@ -22,11 +22,25 @@ export class DescriptiveStats extends BaseModel {
     }
 }
 
+export class PCACord extends BaseModel {
+    x: number = null;
+    y: number = null;
+    anomaly: number = null;
+    id: string = null;
+
+    constructor(instanceData?: PCACord) {
+        super(instanceData);
+        if (instanceData) {
+            this.deserialize(instanceData, this);
+        }
+    }
+}
+
 export class SpotifyAudioAnalysis extends BaseModel {
 
     featureDescriptions: DescriptiveStats[] = [];
     outliers: string[] = [];
-    outlierCords: any[] = [];
+    outlierCords: PCACord[] = [];
 
     constructor(instanceData?: SpotifyAudioAnalysis) {
         super(instanceData);

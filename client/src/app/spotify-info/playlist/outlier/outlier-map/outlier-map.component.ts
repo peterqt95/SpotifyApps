@@ -1,6 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { PCACord } from '@app/models/SpotifyAudioAnalysis';
 import { SpotifyTrack } from '@app/models/SpotifyTrack';
 import { BubbleChartData } from '@app/shared/Classes/ngx-charts/BubbleChartData';
+import { BubbleChartDataItem } from '@swimlane/ngx-charts';
 
 @Component({
   selector: 'app-outlier-map',
@@ -10,6 +12,7 @@ import { BubbleChartData } from '@app/shared/Classes/ngx-charts/BubbleChartData'
 export class OutlierMapComponent implements OnInit {
 
   @Input() outliers: SpotifyTrack[];
+  @Input() outlierCords: PCACord[] = [];
 
   outlierPoints: BubbleChartData[] = [];
 
@@ -18,46 +21,30 @@ export class OutlierMapComponent implements OnInit {
 
   ngOnInit() {
     // Initialize outlier points
-    this.outlierPoints = this.populateOutlierPoints(this.outliers);
-    console.log(this.outliers);
+    this.outlierPoints.push(this.populateOutlierPoints(this.outliers, this.outlierCords));
   }
 
-  private populateOutlierPoints(outliers: SpotifyTrack[]): BubbleChartData[] {
-    const outlierPoints = [];
+  private populateOutlierPoints(outliers: SpotifyTrack[], outlierCords: PCACord[]): BubbleChartData {
+    // Create new bubble chart data
+    const bubbleChartData = new BubbleChartData();
+    bubbleChartData.name = 'Outliers';
 
-    // {
-    //   name: 'Outliers',
-    //   series: [
-    //     {
-    //       name: 'Song 1',
-    //       x: 1.2,
-    //       y: 80.3,
-    //       r: 80.4
-    //     },
-    //     {
-    //       name: 'Song 2',
-    //       x: 3.5,
-    //       y: 80.3,
-    //       r: 78
-    //     },
-    //     {
-    //       name: 'Song 3',
-    //       x: 8,
-    //       y: 75.4,
-    //       r: 79
-    //     }
-    //   ]
-    // }
+    // Get the data points from the outliers
+    const outlierPoints: BubbleChartDataItem[] = [];
+    outliers.forEach((outlier: SpotifyTrack) => {
+      const outlierCord = outlierCords.filter((cord: PCACord) => cord.id === outlier.id)[0];
+      outlierPoints.push({
+        name: outlier.name,
+        x: outlierCord.x,
+        y: outlierCord.y,
+        r: outlier.popularity
+      });
+    });
 
-    // Generate point for each track
-    // outliers.forEach((outlier: SpotifyTrack) => {
-    //   outlierPoints.push({
-    //     name: outlier.name,
-    //     x: 
-    //   });
-    // });
+    // Set the datapoints to our bubble chart series
+    bubbleChartData.series = outlierPoints;
 
-    return outlierPoints;
+    return bubbleChartData;
   }
 
 }

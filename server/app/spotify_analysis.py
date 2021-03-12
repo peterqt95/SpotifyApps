@@ -58,16 +58,20 @@ class SpotifyAnalysis:
             np_scaled = min_max_scaler.fit_transform(temp)
             pca = PCA(n_components=2)
             X = pd.DataFrame(np_scaled)
-            X_reduce = pca.fit_transform(X)
+            X_reduce = pd.DataFrame(pca.fit_transform(X))
 
             # Predict
             model = IsolationForest(contamination="auto")
             model.fit(X_reduce)
 
-            # Check for anomalies
+            # Check for anomalies and add to our transformed data
             temp["anomaly"] = pd.Series(model.predict(X_reduce))
             temp["anomaly"] = temp["anomaly"].map({ 1: 0, -1: 1 })
-            
+            X_reduce = X_reduce.rename(columns={0: "x", 1: "y"})
+            X_reduce["anomaly"] = temp["anomaly"]
+            X_reduce["id"] = self.df[["id"]]
+            X_reduce = X_reduce[X_reduce["anomaly"] == 1]
+
             # Rebuild data and filter for anomlies only to return
             temp = pd.concat([temp, self.df[["id"]]], axis = 1)
             temp["duration"] = temp["duration"].apply(convert_s_to_min_sec)
@@ -79,7 +83,7 @@ class SpotifyAnalysis:
                 results.append(track["id"])
             
             # Return coordinates
-            result_cords = X_reduce.tolist()
+            result_cords = [item for idx, item in X_reduce.to_dict("id").items()]
 
         except Exception as e:
             print(e)

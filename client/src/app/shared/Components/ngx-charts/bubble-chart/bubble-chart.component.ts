@@ -22,39 +22,14 @@ export class BubbleChartComponent implements OnInit {
   showYAxisLabel = true;
   maxRadius = 20;
   minRadius = 5;
-  yScaleMin = 70;
-  yScaleMax = 85;
+  yScaleMin = 0;
+  yScaleMax = 100;
 
   colorScheme = {
     domain: ['#3f51b5']
   };
 
   constructor() {
-    this.bubbleData = [
-      {
-        name: 'Outliers',
-        series: [
-          {
-            name: 'Song 1',
-            x: 1.2,
-            y: 80.3,
-            r: 80.4
-          },
-          {
-            name: 'Song 2',
-            x: 3.5,
-            y: 80.3,
-            r: 78
-          },
-          {
-            name: 'Song 3',
-            x: 8,
-            y: 75.4,
-            r: 79
-          }
-        ]
-      }
-    ];
   }
 
   ngOnInit() {
