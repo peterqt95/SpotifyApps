@@ -40,7 +40,7 @@ export class SpotifyAudioAnalysis extends BaseModel {
 
     featureDescriptions: DescriptiveStats[] = [];
     outliers: string[] = [];
-    outlierCords: PCACord[] = [];
+    spotifyCords: PCACord[] = [];
 
     constructor(instanceData?: SpotifyAudioAnalysis) {
         super(instanceData);

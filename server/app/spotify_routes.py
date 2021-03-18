@@ -292,12 +292,12 @@ class SpotifyTrackAudioAnalysisResource(Resource):
             sp = spotipy.Spotify(auth=access_token)
             sp_analysis = spa.SpotifyAnalysis(tracks_audio_features)
             feature_descriptions = sp_analysis.find_average()
-            outliers, outlier_cords = sp_analysis.find_outliers()
+            outliers, spotify_cords = sp_analysis.find_outliers()
 
             data = {
                 'featureDescriptions': feature_descriptions,
                 'outliers': outliers,
-                'outlierCords': outlier_cords
+                'spotifyCords': spotify_cords
             }
 
         except Exception as e:

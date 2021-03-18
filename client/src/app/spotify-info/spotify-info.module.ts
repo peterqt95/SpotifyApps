@@ -9,6 +9,7 @@ import { OutlierModalComponent } from './playlist/outlier-modal/outlier-modal.co
 import { OutlierComponent } from './playlist/outlier/outlier.component';
 import { RemoveDataComponent } from './playlist/outlier/remove-data/remove-data.component';
 import { OutlierMapComponent } from './playlist/outlier/outlier-map/outlier-map.component';
+import { TrackStatsModalComponent } from './playlist/outlier/outlier-map/track-stats-modal/track-stats-modal.component';
 
 @NgModule({
   declarations: [
@@ -18,13 +19,15 @@ import { OutlierMapComponent } from './playlist/outlier/outlier-map/outlier-map.
     OutlierComponent,
     RemoveDataComponent,
     OutlierMapComponent,
+    TrackStatsModalComponent,
   ],
   imports: [
     SharedModule,
     SpotifyInfoRoutingModule
   ],
   entryComponents: [
-    OutlierModalComponent
+    OutlierModalComponent,
+    TrackStatsModalComponent
   ],
 })
 export class SpotifyInfoModule { }

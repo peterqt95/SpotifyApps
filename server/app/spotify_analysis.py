@@ -70,7 +70,7 @@ class SpotifyAnalysis:
             X_reduce = X_reduce.rename(columns={0: "x", 1: "y"})
             X_reduce["anomaly"] = temp["anomaly"]
             X_reduce["id"] = self.df[["id"]]
-            X_reduce = X_reduce[X_reduce["anomaly"] == 1]
+            # X_reduce = X_reduce[X_reduce["anomaly"] == 1]
 
             # Rebuild data and filter for anomlies only to return
             temp = pd.concat([temp, self.df[["id"]]], axis = 1)

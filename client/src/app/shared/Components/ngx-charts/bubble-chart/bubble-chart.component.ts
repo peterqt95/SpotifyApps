@@ -1,5 +1,12 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material';
+import { SpotifyTrack } from '@app/models/SpotifyTrack';
+import { SpotifyTrackFeatures } from '@app/models/SpotifyTrackFeatures';
+import { TrackStats } from '@app/models/TrackStats';
+import { ModalItem } from '@app/shared/Classes/ModalItem';
 import { BubbleChartData } from '@app/shared/Classes/ngx-charts/BubbleChartData';
+import { TrackStatsModalComponent } from '@app/spotify-info/playlist/outlier/outlier-map/track-stats-modal/track-stats-modal.component';
+import { ModalComponentFactoryComponent } from '../../modal-component-factory/modal-component-factory.component';
 
 @Component({
   selector: 'app-bubble-chart',
@@ -11,6 +18,7 @@ export class BubbleChartComponent implements OnInit {
   @Input() results: BubbleChartData[];
   @Input() xAxisLabel: string;
   @Input() yAxisLabel: string;
+  @Input() extra?: any;
 
   bubbleData: any[];
 
@@ -22,29 +30,39 @@ export class BubbleChartComponent implements OnInit {
   showYAxisLabel = true;
   maxRadius = 20;
   minRadius = 5;
-  yScaleMin = 0;
-  yScaleMax = 100;
+  yScaleMin = -5;
+  yScaleMax = 5;
 
   colorScheme = {
-    domain: ['#3f51b5']
+    domain: ['#ff0000', '#3f51b5']
   };
 
-  constructor() {
-  }
+  constructor(
+    private dialog: MatDialog
+  ) {}
 
   ngOnInit() {
   }
 
   public onSelect(data): void {
-    console.log('Item clicked', JSON.parse(JSON.stringify(data)));
+    if (this.extra) {
+      // Get spotify track info
+      const trackInfo: SpotifyTrack = this.extra.spotifyTracks.find(track => data.extra === track.id);
+      const trackAudioFeature: SpotifyTrackFeatures = this.extra.trackFeatures.find(feature => data.extra === feature.id);
+      const trackStats: TrackStats = new TrackStats(<TrackStats>{trackInfo: trackInfo, trackAudioFeature: trackAudioFeature});
+
+      const MODAL_TITLE = 'Song Info';
+      const dialogRef = this.dialog.open(ModalComponentFactoryComponent, {
+        width: '800px',
+        data: new ModalItem(TrackStatsModalComponent, MODAL_TITLE, trackStats)
+      });
+    }
   }
 
   public onActivate(data): void {
-    console.log('Activate', JSON.parse(JSON.stringify(data)));
   }
 
   public onDeactivate(data): void {
-    console.log('Deactivate', JSON.parse(JSON.stringify(data)));
   }
 
 }
