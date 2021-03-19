@@ -51,7 +51,7 @@ export class BubbleChartComponent implements OnInit {
       const trackAudioFeature: SpotifyTrackFeatures = this.extra.trackFeatures.find(feature => data.extra === feature.id);
       const trackStats: TrackStats = new TrackStats(<TrackStats>{trackInfo: trackInfo, trackAudioFeature: trackAudioFeature});
 
-      const MODAL_TITLE = 'Song Info';
+      const MODAL_TITLE = 'Song Info: ' + trackInfo.name;
       const dialogRef = this.dialog.open(ModalComponentFactoryComponent, {
         width: '800px',
         data: new ModalItem(TrackStatsModalComponent, MODAL_TITLE, trackStats)

@@ -306,6 +306,61 @@ class SpotifyTrackAudioAnalysisResource(Resource):
         
         return data, return_status
 
+class SpotifyAlbumResource(Resource):
+
+    method_decorators = [timing]
+
+    def _convert_params(self, data):
+        def _get_artists(artists):
+            artists_info = []
+            for artist in artists:
+                artist_info = {}
+                artist_info["name"] = artist["name"]
+                artist_info["id"] = artist["id"]
+                artist_info["artistUrl"] = artist["external_urls"].get("spotify", None)
+                artists_info.append(artist_info)
+            
+            return artists_info
+
+        def _get_tracks(tracks):
+            _tracks = []
+            for track in tracks:
+                _tracks.append({
+                    'url': track['external_urls'].get('spotify', None),
+                    'name': track['name'],
+                    'id': track['id'],
+                    'duration': convert_ms_to_min_sec(track['duration_ms']),
+                })
+
+            return _tracks
+
+        temp = {}
+        temp['name'] = data['name']
+        temp['id'] = data['id']
+        temp['image'] = data["images"][0]["url"] if len(data["images"]) > 0 else None
+        temp['url'] = data['external_urls'].get('spotify', None)
+        temp['releaseDate'] = data['release_date']
+        temp['popularity'] = data['popularity']
+        temp['artists'] = _get_artists(data['artists'])
+        temp['tracks'] = _get_tracks(data['tracks']['items'])
+        return temp
+
+    @jwt_required
+    def get(self, id):
+        return_status = HTTPStatus.OK
+        data = {}
+
+        try:
+            access_token = session['spotify_token']
+            sp = spotipy.Spotify(auth=access_token)
+            data = self._convert_params(sp.album(id))
+            # data = sp.album(id)
+        except Exception as e:
+            log_error(e)
+            return_status = HTTPStatus.NOT_FOUND
+        
+        return data, return_status
+
 def add_routes():
     api.add_resource(SpotifyAuthResource, '/spotify_auth')
     api.add_resource(SpotifyRedirectResource, '/spotify_redirect')
@@ -315,3 +370,4 @@ def add_routes():
     api.add_resource(SpotifyPlaylistTracksResource, '/user/<string:user>/playlist/<string:id>/tracks')
     api.add_resource(SpotifyTrackAudioFeaturesResource, '/audio_features')
     api.add_resource(SpotifyTrackAudioAnalysisResource, '/audio_analysis')
+    api.add_resource(SpotifyAlbumResource, '/album/<string:id>')

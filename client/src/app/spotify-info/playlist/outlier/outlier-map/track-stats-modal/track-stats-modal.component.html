@@ -1,3 +1,30 @@
-<p>
-  track-stats-modal works!
-</p>
+<div class="column-flex">
+  <div class="row-flex" *ngIf="loadStatus.isLoaded && !loadStatus.isError">
+    <div class="item-1-2 column-flex border">
+      <div class="row-flex title item-1-2 content-left">
+        <img class="img-card-100" src="{{spotifyAlbum.image}}" alt="no image">
+        <span class="padding-left-1">{{spotifyAlbum.name}}</span>
+      </div>
+      <div class="row-flex item-1-2">
+        <mat-table [dataSource]="dataSource" class="table-container">
+          <ng-container matColumnDef="name">
+            <mat-header-cell *matHeaderCellDef> Name </mat-header-cell>
+            <mat-cell *matCellDef="let row"> {{row.name}} </mat-cell>
+          </ng-container>
+
+          <ng-container matColumnDef="duration">
+            <mat-header-cell *matHeaderCellDef> Duration </mat-header-cell>
+            <mat-cell *matCellDef="let row"> {{row.duration}} </mat-cell>
+          </ng-container>
+
+          <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+          <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+        </mat-table>
+      </div>
+    </div>
+    <div class="item-1-2">
+      
+    </div>
+  </div>
+  <app-loader class="loader" *ngIf="!loadStatus.isLoaded"></app-loader>
+</div>

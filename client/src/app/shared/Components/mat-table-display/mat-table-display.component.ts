@@ -14,13 +14,13 @@ export class MatTableDisplayComponent implements OnInit {
   // Displayed Columns
   displayedColumns: string[] = [];
   dataSource: MatTableDataSource<any>;
-  data: any;
+  tableData: any;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
   ngOnInit() {
     // Set the table
-    this.dataSource = new MatTableDataSource(this.data);
+    this.dataSource = new MatTableDataSource(this.tableData);
     this.dataSource.paginator = this.paginator;
   }
 

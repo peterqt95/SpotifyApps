@@ -9,6 +9,7 @@ import { LoginService } from './login.service';
 import { SpotifyTrack } from '@app/models/SpotifyTrack';
 import { SpotifyTrackFeatures } from '@app/models/SpotifyTrackFeatures';
 import { SpotifyAudioAnalysis } from '@app/models/SpotifyAudioAnalysis';
+import { SpotifyAlbum } from '@app/models/SpotifyAlbum';
 
 const flaskUrl = environment.flaskApi;
 
@@ -111,6 +112,18 @@ export class SpotifyService {
           }
           return returnResult;
         })
+    );
+  }
+
+  public getAlbumInfo(albumId: string) {
+    return this.http.get<SpotifyAlbum>(this.flaskUrl + '/album/' + albumId).pipe(
+      map((result: SpotifyAlbum) => {
+        let returnResult = null;
+        if (result) {
+          returnResult = new SpotifyAlbum(result);
+        }
+        return returnResult;
+      })
     );
   }
 

@@ -27,7 +27,7 @@ export class RemoveDataComponent extends MatTableDisplayComponent implements OnI
   selectedForRemoval: SelectionModel<SpotifyTrack> = new SelectionModel<SpotifyTrack>(true, []);
 
   ngOnInit() {
-    this.data = this.outliers;
+    this.tableData = this.outliers;
     this.displayedColumns = ['checked', 'name', 'artists', 'album', 'duration', 'analysis'];
     super.ngOnInit();
   }
