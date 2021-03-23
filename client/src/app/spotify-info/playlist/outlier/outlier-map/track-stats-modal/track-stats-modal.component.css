@@ -17,8 +17,10 @@
 }
 
 .item-1-2 {
-    flex: 0 0 45%;
+    flex: 1 1 50%;
+    position: relative;
     min-width: 350px;
+    width: 100%;
 }
 
 .img-card-100 {

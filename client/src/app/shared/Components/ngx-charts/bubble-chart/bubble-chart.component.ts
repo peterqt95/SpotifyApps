@@ -53,7 +53,7 @@ export class BubbleChartComponent implements OnInit {
 
       const MODAL_TITLE = 'Song Info: ' + trackInfo.name;
       const dialogRef = this.dialog.open(ModalComponentFactoryComponent, {
-        width: '800px',
+        width: '2000px',
         data: new ModalItem(TrackStatsModalComponent, MODAL_TITLE, trackStats)
       });
     }

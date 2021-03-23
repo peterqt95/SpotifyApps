@@ -23,7 +23,7 @@
       </div>
     </div>
     <div class="item-1-2">
-      
+      <app-bar-chart [results]="trackFeatureChartData" [xAxisLabel]="'Value'" [yAxisLabel]="'Feature'"></app-bar-chart>
     </div>
   </div>
   <app-loader class="loader" *ngIf="!loadStatus.isLoaded"></app-loader>

@@ -1,10 +1,11 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { SpotifyAlbum } from '@app/models/SpotifyAlbum';
-import { SpotifyTrack } from '@app/models/SpotifyTrack';
+import { SpotifyTrackFeatures } from '@app/models/SpotifyTrackFeatures';
 import { TrackStats } from '@app/models/TrackStats';
 import { SpotifyService } from '@app/services/spotify.service';
 import { LoadStatus } from '@app/shared/Classes/LoadStatus';
 import { ModalComponent } from '@app/shared/Classes/ModalComponent';
+import { BarChartData } from '@app/shared/Classes/ngx-charts/BarChartData';
 import { MatTableDisplayComponent } from '@app/shared/Components/mat-table-display/mat-table-display.component';
 import { PartialObserver } from 'rxjs';
 
@@ -21,6 +22,9 @@ export class TrackStatsModalComponent extends MatTableDisplayComponent implement
   // Album Info
   spotifyAlbum: SpotifyAlbum = null;
 
+  // Track Features
+  trackFeatureChartData: BarChartData[] = [];
+
   loadStatus: LoadStatus = new LoadStatus();
 
   constructor(
@@ -30,8 +34,9 @@ export class TrackStatsModalComponent extends MatTableDisplayComponent implement
   }
 
   ngOnInit() {
-    // Fetch album information
+    // Fetch album information and create table
     this.getAlbumInformation(this.data.trackInfo.albumId);
+    this.trackFeatureChartData = this.getTrackAudioFeatures(this.data.trackAudioFeature);
   }
 
   private getAlbumInformation(albumId: string): void {
@@ -42,7 +47,6 @@ export class TrackStatsModalComponent extends MatTableDisplayComponent implement
     return {
       next: (result: SpotifyAlbum) => {
         this.spotifyAlbum = result;
-        console.log(this.spotifyAlbum);
         
         // Initialize table
         this.tableData = this.spotifyAlbum.tracks;
@@ -55,6 +59,20 @@ export class TrackStatsModalComponent extends MatTableDisplayComponent implement
       }
 
     };
+  }
+
+  private getTrackAudioFeatures(trackAudioFeature: SpotifyTrackFeatures): BarChartData[] {
+    const data = [];
+    const featureNames = ['danceability', 'energy', 'speechiness', 'acousticness', 'instrumentalness', 'liveness', 'valence', 'tempo'];
+    featureNames.forEach(feature => {
+      const currentFeatureStat = new BarChartData(<BarChartData>{name: feature, value: trackAudioFeature[feature]});
+      if (feature === 'tempo') {
+        currentFeatureStat.value = currentFeatureStat.value / 100;
+      }
+      data.push(currentFeatureStat);
+    });
+
+    return data;
   }
 
 }
