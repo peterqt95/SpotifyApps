@@ -5,7 +5,6 @@ import { SpotifyTrackFeatures } from '@app/models/SpotifyTrackFeatures';
 import { TrackStats } from '@app/models/TrackStats';
 import { ModalItem } from '@app/shared/Classes/ModalItem';
 import { BubbleChartData } from '@app/shared/Classes/ngx-charts/BubbleChartData';
-import { TrackStatsModalComponent } from '@app/spotify-info/playlist/outlier/outlier-map/track-stats-modal/track-stats-modal.component';
 import { ModalComponentFactoryComponent } from '../../modal-component-factory/modal-component-factory.component';
 
 @Component({
@@ -46,6 +45,7 @@ export class BubbleChartComponent implements OnInit {
 
   public onSelect(data): void {
     if (this.extra) {
+      // console.log(this.extra.component);
       // Get spotify track info
       const trackInfo: SpotifyTrack = this.extra.spotifyTracks.find(track => data.extra === track.id);
       const trackAudioFeature: SpotifyTrackFeatures = this.extra.trackFeatures.find(feature => data.extra === feature.id);
@@ -53,8 +53,8 @@ export class BubbleChartComponent implements OnInit {
 
       const MODAL_TITLE = 'Song Info: ' + trackInfo.name;
       const dialogRef = this.dialog.open(ModalComponentFactoryComponent, {
-        width: '2000px',
-        data: new ModalItem(TrackStatsModalComponent, MODAL_TITLE, trackStats)
+        width: '1000px',
+        data: new ModalItem(this.extra.component, MODAL_TITLE, trackStats)
       });
     }
   }

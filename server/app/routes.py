@@ -1,7 +1,7 @@
 import json
 from app import api, jwt, db, sp_oauth, app
 from .models import User, UserSchema
-from flask import request, session, current_app, jsonify, send_file
+from flask import request, session, current_app, jsonify, send_file, render_template
 from flask_restful import Resource, Api
 from http import HTTPStatus
 from flask_jwt_extended import (
@@ -47,7 +47,8 @@ class Token(Error):
 
 class DefaultResource(Resource):
     def get(self):
-        return {'task': 'Hello world'}
+        # return {'task': 'Hello world'}
+        return render_template('index.html')
         
 class UsersResource(Resource):
     def __init__(self):
@@ -159,7 +160,7 @@ class TestResource(Resource):
     def get(self):
         return send_file("images/test.png", mimetype="image/png")
 
-api.add_resource(DefaultResource, '/')
+# api.add_resource(DefaultResource, '/')
 api.add_resource(UsersResource, '/users')
 api.add_resource(UserResource, '/users/<int:id>')
 api.add_resource(LoginRequired, '/login')
@@ -170,3 +171,7 @@ api.add_resource(TestResource, '/test')
 from app import spotify_routes
 
 spotify_routes.add_routes()
+
+@app.route('/', methods=['GET'])
+def root():
+    return render_template('index.html') # Return index.html 

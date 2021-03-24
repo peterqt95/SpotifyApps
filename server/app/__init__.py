@@ -10,7 +10,7 @@ import spotipy
 import spotipy.util as util
 from spotipy import oauth2
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder='static', template_folder='templates')
 app.config.from_object(Config)
 CORS(app, supports_credentials=True)
 

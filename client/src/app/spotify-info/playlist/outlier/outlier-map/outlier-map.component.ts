@@ -4,6 +4,7 @@ import { SpotifyTrack } from '@app/models/SpotifyTrack';
 import { SpotifyTrackFeatures } from '@app/models/SpotifyTrackFeatures';
 import { BubbleChartData } from '@app/shared/Classes/ngx-charts/BubbleChartData';
 import { BubbleChartDataItem } from '@swimlane/ngx-charts';
+import { TrackStatsModalComponent } from './track-stats-modal/track-stats-modal.component';
 
 @Component({
   selector: 'app-outlier-map',
@@ -17,6 +18,7 @@ export class OutlierMapComponent implements OnInit {
   @Input() trackFeatures: SpotifyTrackFeatures[] = [];
 
   results: BubbleChartData[] = [];
+  modalComponent = TrackStatsModalComponent;
 
   constructor() {
   }

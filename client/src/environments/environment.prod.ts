@@ -1,3 +1,7 @@
+const production = 'http://localhost:5000';
+
 export const environment = {
-  production: true
+  production: false,
+
+  flaskApi: production
 };

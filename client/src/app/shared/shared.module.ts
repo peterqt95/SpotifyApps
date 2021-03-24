@@ -12,7 +12,14 @@ import { BubbleChartComponent } from './Components/ngx-charts/bubble-chart/bubbl
 import { BarChartComponent } from './Components/ngx-charts/bar-chart/bar-chart.component';
 
 @NgModule({
-  declarations: [ModalComponentFactoryComponent, ModalDirective, LoaderComponent, GroupedBarChartComponent, MatTableDisplayComponent, BubbleChartComponent, BarChartComponent],
+  declarations: [
+    ModalComponentFactoryComponent,
+    ModalDirective,
+    LoaderComponent,
+    GroupedBarChartComponent,
+    MatTableDisplayComponent,
+    BubbleChartComponent,
+    BarChartComponent],
   imports: [
     CommonModule,
     MaterialModule,

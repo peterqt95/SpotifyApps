@@ -1,7 +1,4 @@
 import { BaseModel } from './BaseModel';
-import { SpotifyTrack } from './SpotifyTrack';
-import { SpotifyTrackFeatures } from './SpotifyTrackFeatures';
-
 export class DescriptiveStats extends BaseModel {
 
     count: number = null;

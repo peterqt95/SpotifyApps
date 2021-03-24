@@ -7,14 +7,14 @@
       <app-outlier-map [spotifyTracks]="spotifyTracks" [spotifyCords]="audioAnalysis.spotifyCords" [trackFeatures]="trackFeatures"></app-outlier-map>
     </div>
     <div class="flex-2 flex-horiz">
-      <div class="recommendation-content flex-2" *ngIf="loadStatus.get('outliers').isLoaded && !loadStatus.get('outliers').isError">
+      <!-- <div class="recommendation-content" *ngIf="loadStatus.get('outliers').isLoaded && !loadStatus.get('outliers').isError">
         <app-remove-data [outliers]="outliers"
           [trackFeatures]="trackFeatures"
           [featureDescriptions]="audioAnalysis.featureDescriptions"
           [playlistLoaded]="loadStatus.get('outliers').isLoaded"
           [detailsLoaded]="loadStatus.get('outlierDetails').isLoaded"></app-remove-data>
-      </div>
-      <div class="outlier-content flex-2" *ngIf="loadStatus.get('outliers').isLoaded && !loadStatus.get('outliers').isError">
+      </div> -->
+      <div class="outlier-content" *ngIf="loadStatus.get('outliers').isLoaded && !loadStatus.get('outliers').isError">
         <app-remove-data [outliers]="outliers"
           [trackFeatures]="trackFeatures"
           [featureDescriptions]="audioAnalysis.featureDescriptions"
